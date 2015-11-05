@@ -1,0 +1,136 @@
+﻿<controls:MetroWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewmodels="clr-namespace:Nico;assembly=Nico"
+    xmlns:views="clr-namespace:Nico"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    
+    Title="WcfStorm Tala Community Edition"
+    Height="600" MinWidth="1200" Width="1200"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    Background="#D6DBE9"
+    Style="{DynamicResource CleanWindowStyleKey}"
+    GlowBrush="{DynamicResource AccentColorBrush}"
+  >
+
+    <controls:MetroWindow.LeftWindowCommands>
+        <controls:WindowCommands>
+            <Button Content="Send" />
+            <Button Content="Cookies" />
+            <Button Content="Settings" />
+            <Button Content="Script" />
+            <ComboBox>
+                <ComboBoxItem Content="GET" />
+            </ComboBox>
+        </controls:WindowCommands>
+    </controls:MetroWindow.LeftWindowCommands>
+
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button Content="Another Test" />
+            <ToggleButton Content="ToggleButton" />
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+
+
+    <Grid Background="#293955">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+
+        </Grid.RowDefinitions>
+        <Grid Background="#293955" Margin="5">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--Right bar Actions-->
+            <!--
+        <StackPanel Orientation="Vertical" Grid.Column="0">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="5" />
+                </Style>
+            </StackPanel.Resources>
+            <Button Content="SN" />
+            <Button Content="AC" />
+        </StackPanel>-->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!--URL -->
+                <ComboBox Grid.Row="0"></ComboBox>
+
+                <!--Request / Response -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+
+                    </Grid.ColumnDefinitions>
+                    <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+
+                    <!--Request Grid -->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <GridSplitter Grid.Row="1" Height="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        <!--HTTP Header-->
+                        <Grid Grid.Row="0" >
+                            <TextBox />
+                        </Grid>
+                        <!--HTTP Request-->
+                        <Grid Grid.Row="2" >
+                            <TextBox />
+                        </Grid>
+                    </Grid>
+
+                    <!--Response Grid -->
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <GridSplitter Grid.Row="1" Height="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        <!--HTTP Header-->
+                        <Grid Grid.Row="0" >
+                            <TextBox />
+                        </Grid>
+                        <!--HTTP Request-->
+                        <Grid Grid.Row="2" >
+                            <TextBox />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+
+        </Grid>
+        <!--Status Bar-->
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2" Background="#007ACC" Margin="0">
+            <StatusBar.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="White" />
+                </Style>
+            </StatusBar.Resources>
+            <StatusBarItem HorizontalAlignment="Left">
+                <TextBlock Text="Copyright : Erik Araojo, 2015" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{Binding StatusMessage}" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+  
+</controls:MetroWindow>
