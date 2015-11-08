@@ -12,12 +12,14 @@
     Style="{DynamicResource CleanWindowStyleKey}"
     ResizeMode="CanResizeWithGrip"
     GlowBrush="{DynamicResource AccentColorBrush}">
+    <controls:MetroWindow.Resources>
+         </controls:MetroWindow.Resources>
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
-            <Button>
+            <Button Command="{Binding SendCommand}">
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.Resources>
                         <SolidColorBrush Color="Green" x:Key="FillColor" />
@@ -92,8 +94,29 @@
                 </Grid.RowDefinitions>
 
                 <!--URL -->
-                <ComboBox Grid.Row="0" Background="White">
-                    <ComboBox.Template>
+                <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" SelectedIndex="0">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Resources>
+                                    <SolidColorBrush Color="SkyBlue" x:Key="FillColor" />
+                                </StackPanel.Resources>
+                                <ContentControl Content="{StaticResource icon_globe}" Width="16" Height="16" Background="WhiteSmoke" Margin="2" />
+                                <TextBlock Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                         Visibility="{Binding IsNotSelected, Converter={StaticResource BooleanToVisibilityConverter }}"
+                                         Width="{Binding ElementName=urlBox, Path=ActualWidth}"/>
+                                <TextBox Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                        Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter }}"
+                                         Width="{Binding ElementName=urlBox, Path=ActualWidth}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <!--<ComboBox.Template>
                         <ControlTemplate>
                             <DockPanel  >
                                 <DockPanel.Resources>
@@ -103,11 +126,11 @@
                                 <TextBox Text="http://" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                             </DockPanel>
                         </ControlTemplate>
-                    </ComboBox.Template>
+                    </ComboBox.Template>-->
                 </ComboBox>
 
                 <!--Request / Response -->
-                <Grid Grid.Row="1" Background="Yellow" Margin="0,3,0,0">
+                <Grid Grid.Row="1" Margin="0,3,0,0">
                     <Grid.Resources>
                         <Style TargetType="GridSplitter">
                             <Setter Property="Background" Value="LightGray" />
@@ -129,7 +152,7 @@
                         </Grid.RowDefinitions>
                         <GridSplitter Grid.Row="1" Height="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                         <!--HTTP Header-->
-                        <Grid Grid.Row="0" Background="WhiteSmoke">
+                        <Grid Grid.Row="0" Background="WhiteSmoke" >
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />

@@ -10,12 +10,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- Icons -->
                 <ResourceDictionary Source="pack://application:,,,/WcfStorm.Tala.Resources;component/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/WcfStorm.Tala.Resources;component/Controls.xaml" />
 
                 <!-- MahApps -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                 
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Clean/CleanWindow.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro.Resources;component/Icons.xaml" />-->
 
@@ -90,7 +92,9 @@
                     <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Accent200Foreground}" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+           
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            
             <Style TargetType="ContextMenu">
                 <Style.Resources>
                     <Style TargetType="TextBlock">
