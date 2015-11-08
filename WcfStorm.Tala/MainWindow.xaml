@@ -18,6 +18,9 @@
         <controls:WindowCommands>
             <Button>
                 <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <SolidColorBrush Color="Green" x:Key="FillColor" />
+                    </StackPanel.Resources>
                     <ContentControl Content="{StaticResource icon_play}" Width="24" Height="24" />
                     <TextBlock Text="send"  VerticalAlignment="Center" />
                 </StackPanel>
@@ -36,7 +39,7 @@
                 </StackPanel>
             </Button>
             <ComboBox>
-                <ComboBoxItem Content="GET" />
+                <ComboBoxItem Content="GET" IsSelected="True" />
             </ComboBox>
         </controls:WindowCommands>
     </controls:MetroWindow.LeftWindowCommands>

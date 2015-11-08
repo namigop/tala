@@ -94,6 +94,7 @@
             <Style TargetType="ContextMenu">
                 <Style.Resources>
                     <Style TargetType="TextBlock">
+                        
                         <Setter Property="FontSize" Value="12" />
                     </Style>
                 </Style.Resources>
@@ -105,6 +106,8 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            
+            <SolidColorBrush Color="Black" x:Key="FillColor" />
         
         </ResourceDictionary>
     </Application.Resources>
