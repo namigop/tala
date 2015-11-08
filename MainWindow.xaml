@@ -14,12 +14,27 @@
     GlowBrush="{DynamicResource AccentColorBrush}"
   >
 
-    <controls:MetroWindow.LeftWindowCommands>
+    <controls:MetroWindow.LeftWindowCommands>         
         <controls:WindowCommands>
-            <Button Content="Send" />
-            <Button Content="Cookies" />
-            <Button Content="Settings" />
-            <Button Content="Script" />
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Content="{StaticResource icon_play}" Width="24" Height="24" />
+                    <TextBlock Text="send"  VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Content="cookies" />
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Content="{StaticResource icon_gear}" Width="24" Height="24" />
+                    <TextBlock Text="settings" VerticalAlignment="Center"  />
+                </StackPanel>
+            </Button>
+            <Button >
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Content="{StaticResource icon_script}" Width="24" Height="24" />
+                    <TextBlock Text="script" VerticalAlignment="Center"  />
+                </StackPanel>
+            </Button>
             <ComboBox>
                 <ComboBoxItem Content="GET" />
             </ComboBox>
@@ -28,8 +43,12 @@
 
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
-            <Button Content="Another Test" />
-            <ToggleButton Content="ToggleButton" />
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Content="{StaticResource icon_help}" Width="16" Height="16" />                    
+                </StackPanel>
+            </Button>
+            <!--ToggleButton Content="ToggleButton" />-->
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
 

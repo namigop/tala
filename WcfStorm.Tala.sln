@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WcfStorm.Tala", "WcfStorm.Tala.fsproj", "{2892313D-595C-4F1E-8182-926A9D0F3503}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfStorm.Tala.Resources", "..\WcfStorm.Tala.Resources\WcfStorm.Tala.Resources.csproj", "{F3F18236-3067-4928-9857-CD9D42D52888}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2892313D-595C-4F1E-8182-926A9D0F3503}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2892313D-595C-4F1E-8182-926A9D0F3503}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2892313D-595C-4F1E-8182-926A9D0F3503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3F18236-3067-4928-9857-CD9D42D52888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3F18236-3067-4928-9857-CD9D42D52888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3F18236-3067-4928-9857-CD9D42D52888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3F18236-3067-4928-9857-CD9D42D52888}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

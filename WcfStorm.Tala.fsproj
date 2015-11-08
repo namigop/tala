@@ -134,6 +134,13 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WcfStorm.Tala.Resources\WcfStorm.Tala.Resources.csproj">
+      <Name>WcfStorm.Tala.Resources</Name>
+      <Project>{f3f18236-3067-4928-9857-cd9d42d52888}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

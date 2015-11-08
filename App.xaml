@@ -8,6 +8,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- Icons -->
+                <ResourceDictionary Source="pack://application:,,,/WcfStorm.Tala.Resources;component/Icons.xaml" />
 
                 <!-- MahApps -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
