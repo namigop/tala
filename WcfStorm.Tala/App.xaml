@@ -108,7 +108,7 @@
             </Style>
             
             <SolidColorBrush Color="Black" x:Key="FillColor" />
-        
+            <SolidColorBrush Color="#D6DBE9" x:Key="DefaultBackground" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
