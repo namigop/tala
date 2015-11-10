@@ -5,13 +5,17 @@
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:local="clr-namespace:WcfStorm.Tala;assembly=WcfStorm.Tala"
     xmlns:avalonEdit="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+    xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
+    
     Title="WcfStorm Tala Community Edition"
     Height="600" MinWidth="1200" Width="1200"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     Background="{StaticResource DefaultBackground}"
     Style="{DynamicResource CleanWindowStyleKey}"
     ResizeMode="CanResizeWithGrip"
-    GlowBrush="{DynamicResource AccentColorBrush}">
+    GlowBrush="{DynamicResource AccentColorBrush}"
+    
+    >
     <controls:MetroWindow.Resources>
          </controls:MetroWindow.Resources>
     <Window.DataContext>
@@ -202,7 +206,7 @@
                             </Border>
                             <avalonEdit:TextEditor Grid.Row="1" Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt" 
                                                    SyntaxHighlighting="{Binding Request.Highlighting}"
-                                                   Document="{Binding Request.Text}"/>
+                                                   Document="{Binding Request.Doc}"/>
                         </Grid>
                     </Grid>
 
@@ -225,7 +229,7 @@
                             </Border>
                             <avalonEdit:TextEditor Grid.Row="1" Name="textEditorResponse" FontFamily="Consolas" FontSize="9pt" 
                                                    SyntaxHighlighting="{Binding Response.Highlighting}"
-                                                   Document="{Binding Response.Text}"/>
+                                                   Document="{Binding Response.Doc}"/>
                         </Grid>
                     </Grid>
                 </Grid>

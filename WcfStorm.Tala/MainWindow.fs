@@ -4,6 +4,12 @@ open Xceed.Wpf.Toolkit
 open System.Collections.ObjectModel
 open RestSharp
 open System.Threading
+open FsXaml
+open System
+
+type MainWindow = XAML<"MainWindow.xaml">
+ 
+   
 
 type MainWindowViewModel() =
     let requestPayload = HttpPayload()
@@ -27,21 +33,14 @@ type MainWindowViewModel() =
 
     member this.SendCommand = 
         let run() =
-            let temp =  async {
-                let client = new RestClient("http://www.google.com")
-                let request = new RestRequest("/")
-                let cancellationTokenSource = new CancellationTokenSource()
-                let! restResponse =  Async.AwaitTask( client.ExecuteTaskAsync(request, cancellationTokenSource.Token) )
-                return restResponse          
-                }
-
-            Async.RunSynchronously temp
-         
-
+            let client = Client.create "http://www.google.com"
+            let req = GET(Uri("http://www.google.com"), new RestRequest("/"))
+            Async.RunSynchronously (client.Run req)
+           
         let cmd = 
             Command.create 
                 (fun arg -> true) 
                 (fun arg -> 
-                    let res = run()
-                    this.Response.Text.Text <- res.Content )
+                    let res, cancelToken = run()
+                    this.Response.Doc.Text <-  res.Content)
         cmd

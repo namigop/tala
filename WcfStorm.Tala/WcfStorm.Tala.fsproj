@@ -56,10 +56,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="packages.config" />
+    <Compile Include="Resource.fs" />
     <Compile Include="RelayCommand.fs" />
-    <None Include="JsonBraceFolder.fs" />
+    <Compile Include="JsonBraceFolder.fs" />
     <Compile Include="NotifyBase.fs" />
     <Compile Include="TargetUrl.fs" />
+    <Compile Include="Client.fs" />
     <Compile Include="HttpPayload.fs" />
     <Compile Include="HttpHeaders.fs" />
     <Compile Include="Commands.fs" />

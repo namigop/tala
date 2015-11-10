@@ -6,30 +6,31 @@ open System.IO
 open System.Resources
 open System.Xml
 open ICSharpCode.AvalonEdit.Document
+open ICSharpCode.AvalonEdit.Folding
 
-module Resource =
-    open ICSharpCode.AvalonEdit.Highlighting.Xshd
-
-    let jsonHighlightingMode =
-        let res = ResourceManager("Tala", System.Reflection.Assembly.GetExecutingAssembly())
-        let stream = res.GetObject("Json") :?> byte array
-        let ms = new MemoryStream(stream)
-        HighlightingLoader.Load(new XmlTextReader(ms), HighlightingManager.Instance);
-        
-type HttpPayload()=
+type HttpPayload() as this =
     inherit NotifyBase()
-    let mutable highlighting : IHighlightingDefinition =
-        Resource.jsonHighlightingMode
-        // Unchecked.defaultof<IHighlightingDefinition>
-    let mutable text = TextDocument()
-
-
+    let mutable highlighting = Resource.jsonHighlightingMode
+    let mutable mode = "json"
+    let mutable doc = TextDocument(Text="Foo")
+    let mutable foldFunction = 
+        let folding, _ = EditorOptions.get mode
+        folding
+    
+    member this.Mode 
+        with get() = mode
+        and set v =
+            let folding, highlighting2 = EditorOptions.get v
+            this.Highlighting <- highlighting2
+            foldFunction <- folding 
     member this.Highlighting 
         with get () = highlighting
         and set v = this.RaiseAndSetIfChanged(&highlighting, v, "Highlighting")
     
-    member this.Text 
-        with get () = text
-        and set v = this.RaiseAndSetIfChanged(&text, v, "Text")
+    member this.Doc 
+        with get () = doc
+        and set v = this.RaiseAndSetIfChanged(&doc, v, "Doc")
 
+    member x.FoldFunction = foldFunction
+        
     
