@@ -20,12 +20,12 @@ type HttpHeader() as this =
 type HttpHeaders() as this =
     inherit ObservableCollection<HttpHeader>()
     
-    override this.OnCollectionChanged(args) =
-        match args.Action with
-        | NotifyCollectionChangedAction.Add ->
-            base.OnCollectionChanged(args)
-            if (args.NewItems.Count = 1) then
-                let key = args.NewItems.[0] :?> HttpHeader
-                if not(String.IsNullOrWhiteSpace(key.Key)) then
-                    this.Add(HttpHeader(Key="", Value=""))
-        |_ ->  base.OnCollectionChanged(args)
+//    override this.OnCollectionChanged(args) =
+//        match args.Action with
+//        | NotifyCollectionChangedAction.Add ->
+//            base.OnCollectionChanged(args)
+//            if (args.NewItems.Count = 1) then
+//                let key = args.NewItems.[0] :?> HttpHeader
+//                if not(String.IsNullOrWhiteSpace(key.Key)) then
+//                    this.Add(HttpHeader(Key="", Value=""))
+//        |_ ->  base.OnCollectionChanged(args)

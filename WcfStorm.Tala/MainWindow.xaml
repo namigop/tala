@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:WcfStorm.Tala;assembly=WcfStorm.Tala"
     xmlns:avalonEdit="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
     xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
-    
+    TitlebarHeight="40"
     Title="WcfStorm Tala Community Edition"
     Height="600" MinWidth="1200" Width="1200"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -98,7 +98,8 @@
                 </Grid.RowDefinitions>
 
                 <!--URL -->
-                <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" SelectedIndex="0">
+                <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" SelectedIndex="0"
+                          SelectedItem="{Binding TargetUrl}" >
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="ComboBoxItem">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
@@ -167,7 +168,7 @@
                                 <Border Grid.Row="0"  Background="#CFD6E5">
                                     <Label Content="HTTP Headers" FontSize="14" FontWeight="SemiBold" />
                                 </Border>
-                                <ListBox ItemsSource="{Binding Headers}" Grid.Row="1" Margin="0,0,0,0">
+                                <ListBox ItemsSource="{Binding Headers}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -183,7 +184,7 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                                <Button Grid.Row="2" HorizontalAlignment="Left" Margin="5">
+                                <Button Grid.Row="2" HorizontalAlignment="Left" Margin="5" Command="{Binding AddRequestHeaderCommand}">
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel.Resources>
                                             <SolidColorBrush Color="SkyBlue" x:Key="FillColor" />

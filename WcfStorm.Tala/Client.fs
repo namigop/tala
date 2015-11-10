@@ -24,7 +24,6 @@ module Client =
             let! restResponse =  Async.AwaitTask( client.ExecuteTaskAsync(restReq, cancellationTokenSource.Token) )
             return (Response(restResponse), cancellationTokenSource)
         }
-
         
         {
             new IClient with
@@ -39,6 +38,10 @@ module Client =
                      
                 
         }
+    
+    let createGetRequest =
+        let req = RestRequest()
+        req.
        
 
                 
