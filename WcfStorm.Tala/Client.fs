@@ -12,6 +12,7 @@ type Request =
 
 type Response(resp : IRestResponse) =   
     member x.Content = resp.Content
+    member x.RestResponse = resp
 
 type IClient =
     abstract Run : Request -> Async<Response * CancellationTokenSource>
@@ -39,9 +40,6 @@ module Client =
                 
         }
     
-    let createGetRequest =
-        let req = RestRequest()
-        req.
        
 
                 

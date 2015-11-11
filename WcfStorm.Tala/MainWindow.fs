@@ -6,6 +6,7 @@ open RestSharp
 open System.Threading
 open FsXaml
 open System
+open System.Net
 
 type MainWindow = XAML<"MainWindow.xaml">
  
@@ -22,22 +23,29 @@ type MainWindowViewModel() =
         temp.Add(TargetUrl(Url="http://www.microsoft.com", IsCallInProgress=false))
         temp
     let mutable targetUrl = urls.Item(0)
-
+    
+    let respHeaders = HttpHeaders()
     let headers = 
         let temp = HttpHeaders()
         temp.Add(WcfStorm.Tala.HttpHeader(Key="User-Agent", Value="WcfStorm.Rest/2.2.0 (.NET4.0);support@wcfstorm.com"))
         temp.Add(WcfStorm.Tala.HttpHeader(Key="Content-Type", Value="application/json"))
         temp
 
+    let mutable statusCode = ""
 
     member this.TargetUrl 
         with get() = targetUrl
         and set v = this.RaiseAndSetIfChanged(&targetUrl, v, "TargetUrl")
   
     member this.Headers  = headers
+    member this.ResponseHeaders = respHeaders
     member this.Request  = requestPayload
     member this.Response = responsePayload
     member this.Urls     = urls
+    
+    member this.ResponseStatusCode 
+        with get() = statusCode
+        and set v = this.RaiseAndSetIfChanged(&statusCode, v, "ResponseStatusCode")
 
     member this.AddRequestHeaderCommand =
         Command.create 
@@ -55,5 +63,14 @@ type MainWindowViewModel() =
                 (fun arg -> true) 
                 (fun arg -> 
                     let res, cancelToken = run()
-                    this.Response.Doc.Text <-  res.Content)
+                    this.ResponseStatusCode <- res.RestResponse.StatusCode.ToString() + " " + res.RestResponse.StatusDescription
+                    this.Response.Doc.Text <-  res.Content
+                    respHeaders.Clear()
+                    res.RestResponse.Headers
+                    |> Seq.fold(fun (acc:HttpHeaders) i -> 
+                        acc.Add(WcfStorm.Tala.HttpHeader(Key=i.Name, Value=i.Value.ToString()))
+                        acc) respHeaders
+                    |> ignore
+                    )
+                    
         cmd

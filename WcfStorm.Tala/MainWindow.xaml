@@ -42,10 +42,19 @@
             <Button>
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.Resources>
+                        <SolidColorBrush Color="DarkBlue" x:Key="FillColor" />
+                    </StackPanel.Resources>
+                    <ContentControl Content="{StaticResource icon_save}" Width="24" Height="24" />
+                    <TextBlock Text="save" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
                         <SolidColorBrush Color="DarkGoldenrod" x:Key="FillColor" />
                     </StackPanel.Resources>
-                    <ContentControl Content="{StaticResource icon_script}" Width="24" Height="24" />
-                    <TextBlock Text="script" VerticalAlignment="Center" />
+                    <ContentControl Content="{StaticResource icon_folder}" Width="24" Height="24" />
+                    <TextBlock Text="open" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
             <ComboBox Width="77">
@@ -153,7 +162,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="2*" />
                         </Grid.RowDefinitions>
                         <GridSplitter Grid.Row="1" Height="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                         <!--HTTP Header-->
@@ -162,12 +171,21 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
+                               
                                 </Grid.RowDefinitions>
-                                <Border Grid.Row="0"  Background="#CFD6E5">
-                                    <Label Content="HTTP Headers" FontSize="14" FontWeight="SemiBold" />
-                                </Border>
+                                <DockPanel Grid.Row="0"  Background="#CFD6E5">
+
+                                    <Button BorderThickness="0"  Style="{DynamicResource SquareButtonStyle}" Background="Transparent" DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestHeaderCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel.Resources>
+                                                <SolidColorBrush Color="Navy" x:Key="FillColor" />
+                                            </StackPanel.Resources>
+                                            <ContentControl Content="{StaticResource icon_plus}" Width="16" Height="16" />
+                                          
+                                        </StackPanel>
+                                    </Button>
+                                    <Label Content="Request Headers" FontSize="14" FontWeight="SemiBold" />
+                                </DockPanel>
                                 <ListBox ItemsSource="{Binding Headers}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
@@ -184,16 +202,7 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                                <Button Grid.Row="2" HorizontalAlignment="Left" Margin="5" Command="{Binding AddRequestHeaderCommand}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <StackPanel.Resources>
-                                            <SolidColorBrush Color="SkyBlue" x:Key="FillColor" />
-                                        </StackPanel.Resources>
-                                        <ContentControl Content="{StaticResource icon_plus}" Width="16" Height="16" />
-                                        <TextBlock Text="add" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </Button>
-                                <Border Grid.Row="3" />
+                               
                             </Grid>
                         </Grid>
                         <!--HTTP Request-->
@@ -203,7 +212,7 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0"  Background="#CFD6E5">
-                                <Label Content="Request" FontSize="14" FontWeight="SemiBold" />
+                                <Label Content="Request Body" FontSize="14" FontWeight="SemiBold" />
                             </Border>
                             <avalonEdit:TextEditor Grid.Row="1" Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt" 
                                                    SyntaxHighlighting="{Binding Request.Highlighting}"
@@ -216,17 +225,51 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="2*" />
                         </Grid.RowDefinitions>
-                        <!--<GridSplitter Grid.Row="1" Height="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />-->
+                        <Grid Grid.Row="0" Background="WhiteSmoke" >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+
+                                </Grid.RowDefinitions>
+                                <DockPanel Grid.Row="0"  Background="#CFD6E5">
+
+                                    <TextBlock  DockPanel.Dock="Right" HorizontalAlignment="Left"  VerticalAlignment="Center" 
+                                                Text="{Binding ResponseStatusCode}"
+                                                FontWeight="SemiBold" FontSize="14">
+                                    </TextBlock>
+                                    <Label Content="Response Headers" FontSize="14" FontWeight="SemiBold" />
+                                </DockPanel>
+                                <ListBox ItemsSource="{Binding ResponseHeaders}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="2*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Text="{Binding Key}" Grid.Column="0" IsReadOnly="True"/>
+                                                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                                <TextBox Text="{Binding Value}" Grid.Column="2" IsReadOnly="True" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+
+                            </Grid>
+                        </Grid>
+                        <GridSplitter Grid.Row="1" Height="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
                         <!--HTTP Header-->
-                        <Grid Grid.Row="0" Background="WhiteSmoke" Grid.RowSpan="3">
+                        <Grid Grid.Row="2" Background="WhiteSmoke" Grid.RowSpan="3">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0"  Background="#CFD6E5">
-                                <Label Content="Response" FontSize="14" FontWeight="SemiBold" />
+                                <Label Content="Response Body" FontSize="14" FontWeight="SemiBold" />
                             </Border>
                             <avalonEdit:TextEditor Grid.Row="1" Name="textEditorResponse" FontFamily="Consolas" FontSize="9pt" 
                                                    SyntaxHighlighting="{Binding Response.Highlighting}"
