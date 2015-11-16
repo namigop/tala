@@ -57,29 +57,48 @@ type MainWindowViewModel() =
             (fun arg -> true) 
             (fun arg -> headers.Add(WcfStorm.Tala.HttpHeader(Key="", Value="")))
         
-    member this.SendCommand = 
-        let run() =
-            try
-                this.IsCallInProgress <- true
-                let client = Client.create this.TargetUrl.Url
-                let req = GET(Uri("http://www.google.com"), new RestRequest("/"))
-                Async.RunSynchronously (client.Run req)
-            finally
-                 this.IsCallInProgress <- false
+    member this.SendCommand =
+        let processResp (rawResponse:IRestResponse) =
+            this.ResponseStatusCode <- "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription
+            this.Response.Doc.Text <-  rawResponse.Content
+            this.IsCallInProgress <- false
+            respHeaders.Clear()
+            rawResponse.Headers
+                |> Seq.fold(fun (acc:HttpHeaders) i -> 
+                    acc.Add(WcfStorm.Tala.HttpHeader(Key=i.Name, Value=i.Value.ToString()))
+                    acc) respHeaders
+                |> ignore      
+
+        let run resp = async {    
+            match resp with
+            | GET_Resp(id, respTask) ->
+                let! rawResponse = Async.AwaitTask(respTask)
+                return rawResponse
+            | POST_Resp(id, respTask) -> 
+                let! rawResponse = Async.AwaitTask(respTask)
+                return rawResponse
+        } 
            
+        let setup() =                
+            let client = Client.create this.TargetUrl.Url
+            let req = GET_Req(Guid.NewGuid(), new RestRequest("/"))
+            let cancel = new CancellationTokenSource()
+            (client.Run cancel req)
+             
         let cmd = 
             Command.create 
                 (fun arg -> not this.IsCallInProgress) 
                 (fun arg -> 
-                    let res, cancelToken = run()
-                    this.ResponseStatusCode <- "HTTP " + Convert.ToInt32(res.RestResponse.StatusCode).ToString() + " " + res.RestResponse.StatusDescription
-                    this.Response.Doc.Text <-  res.Content
-                    respHeaders.Clear()
-                    res.RestResponse.Headers
-                    |> Seq.fold(fun (acc:HttpHeaders) i -> 
-                        acc.Add(WcfStorm.Tala.HttpHeader(Key=i.Name, Value=i.Value.ToString()))
-                        acc) respHeaders
-                    |> ignore
-                    )
-                    
+                    this.IsCallInProgress <- true
+                    Async.StartWithContinuations( 
+                        run (setup()),
+                        (fun r -> processResp r),
+                        (fun _ -> this.Response.Doc.Text <- "Operation failed."),
+                        (fun _ -> this.Response.Doc.Text <- "Operation canceled."))
+                )
+//        let cmd = 
+//            Command.create 
+//                (fun arg -> true) 
+//                (fun arg ->  () )
+//                    
         cmd

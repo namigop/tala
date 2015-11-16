@@ -6,21 +6,22 @@
     xmlns:local="clr-namespace:WcfStorm.Tala;assembly=WcfStorm.Tala"
     xmlns:avalonEdit="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
     xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     TitlebarHeight="40"
     Title="WcfStorm Tala Community Edition"
     Height="600" MinWidth="1200" Width="1200"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-    Background="{StaticResource DefaultBackground}"
     Style="{DynamicResource CleanWindowStyleKey}"
     ResizeMode="CanResizeWithGrip"
     GlowBrush="{DynamicResource AccentColorBrush}"
     
     >
-    <controls:MetroWindow.Resources>
-         </controls:MetroWindow.Resources>
-    <Window.DataContext>
+    <controls:MetroWindow.Background>
+        <StaticResource ResourceKey="DefaultBackground"/>
+    </controls:MetroWindow.Background>
+    <controls:MetroWindow.DataContext>
         <local:MainWindowViewModel />
-    </Window.DataContext>
+    </controls:MetroWindow.DataContext>
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
             <Button Command="{Binding SendCommand}">
@@ -83,25 +84,15 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ProgressBar Grid.Row="0" IsIndeterminate="True" Height="5" Margin="0,5,0,0" Visibility="{Binding IsCallInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <Grid Background="#293955" Margin="2,5,2,2" Grid.Row="1">
+            <!--<ProgressBar Grid.Row="0" VerticalAlignment="Top"  IsIndeterminate="True" Height="5" Margin="0,5,0,0" Visibility="{Binding IsCallInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!--Right bar Actions-->
-            <!--
-        <StackPanel Orientation="Vertical" Grid.Column="0">
-            <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Margin" Value="5" />
-                </Style>
-            </StackPanel.Resources>
-            <Button Content="SN" />
-            <Button Content="AC" />
-        </StackPanel>-->
+             
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -109,10 +100,13 @@
                 </Grid.RowDefinitions>
 
                 <!--URL -->
-                <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" SelectedIndex="0"
-                          SelectedItem="{Binding TargetUrl}" >
+                <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" 
+                          SelectedIndex="0"
+                                             IsEditable="True"
+                          IsReadOnly="False"
+					        SelectedItem="{Binding TargetUrl}" >
                     <ComboBox.ItemContainerStyle>
-                        <Style TargetType="ComboBoxItem">
+                        <Style TargetType="{x:Type ComboBoxItem}">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                         </Style>
                     </ComboBox.ItemContainerStyle>
@@ -124,11 +118,11 @@
                                 </StackPanel.Resources>
                                 <ContentControl Content="{StaticResource icon_globe}" Width="16" Height="16" Background="WhiteSmoke" Margin="2" />
                                 <TextBlock Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                         Visibility="{Binding IsNotSelected, Converter={StaticResource BooleanToVisibilityConverter }}"
-                                         Width="{Binding ElementName=urlBox, Path=ActualWidth}"/>
-                                <TextBox Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                        Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter }}"
-                                         Width="{Binding ElementName=urlBox, Path=ActualWidth}"/>
+									Visibility="{Binding IsNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
+									Width="{Binding ActualWidth, ElementName=urlBox}"/>
+                                <!--<TextBox Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+									Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
+									Width="{Binding ActualWidth, ElementName=urlBox}"/>-->
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -148,7 +142,7 @@
                 <!--Request / Response -->
                 <Grid Grid.Row="1" Margin="0,3,0,0">
                     <Grid.Resources>
-                        <Style TargetType="GridSplitter">
+                        <Style TargetType="{x:Type GridSplitter}">
                             <Setter Property="Background" Value="LightGray" />
                         </Style>
                     </Grid.Resources>
@@ -173,7 +167,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
-                               
+
                                 </Grid.RowDefinitions>
                                 <DockPanel Grid.Row="0"  Background="#CFD6E5">
 
@@ -183,7 +177,7 @@
                                                 <SolidColorBrush Color="Navy" x:Key="FillColor" />
                                             </StackPanel.Resources>
                                             <ContentControl Content="{StaticResource icon_plus}" Width="16" Height="16" />
-                                          
+
                                         </StackPanel>
                                     </Button>
                                     <Label Content="Request Headers" FontSize="14" FontWeight="SemiBold" />
@@ -204,7 +198,7 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                               
+
                             </Grid>
                         </Grid>
                         <!--HTTP Request-->
@@ -216,9 +210,9 @@
                             <Border Grid.Row="0"  Background="#CFD6E5">
                                 <Label Content="Request Body" FontSize="14" FontWeight="SemiBold" />
                             </Border>
-                            <avalonEdit:TextEditor Grid.Row="1" Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt" 
-                                                   SyntaxHighlighting="{Binding Request.Highlighting}"
-                                                   Document="{Binding Request.Doc}"/>
+                            <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt" 
+								SyntaxHighlighting="{Binding Request.Highlighting}"
+								Document="{Binding Request.Doc}"/>
                         </Grid>
                     </Grid>
 
@@ -239,9 +233,8 @@
                                 <DockPanel Grid.Row="0"  Background="#CFD6E5">
 
                                     <TextBlock  DockPanel.Dock="Right" HorizontalAlignment="Left"  VerticalAlignment="Center" 
-                                                Text="{Binding ResponseStatusCode}"
-                                                FontWeight="SemiBold" FontSize="14">
-                                    </TextBlock>
+										Text="{Binding ResponseStatusCode}"
+										FontWeight="SemiBold" FontSize="14"/>
                                     <Label Content="Response Headers" FontSize="14" FontWeight="SemiBold" />
                                 </DockPanel>
                                 <ListBox ItemsSource="{Binding ResponseHeaders}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -273,9 +266,9 @@
                             <Border Grid.Row="0"  Background="#CFD6E5">
                                 <Label Content="Response Body" FontSize="14" FontWeight="SemiBold" />
                             </Border>
-                            <avalonEdit:TextEditor Grid.Row="1" Name="textEditorResponse" FontFamily="Consolas" FontSize="9pt" 
-                                                   SyntaxHighlighting="{Binding Response.Highlighting}"
-                                                   Document="{Binding Response.Doc}"/>
+                            <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorResponse" FontFamily="Consolas" FontSize="9pt" 
+								SyntaxHighlighting="{Binding Response.Highlighting}"
+								Document="{Binding Response.Doc}"/>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -284,7 +277,7 @@
         <!--Status Bar-->
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Background="#007ACC" Margin="0">
             <StatusBar.Resources>
-                <Style TargetType="TextBlock">
+                <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Foreground" Value="White" />
                 </Style>
             </StatusBar.Resources>

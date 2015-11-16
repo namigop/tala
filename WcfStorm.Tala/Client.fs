@@ -3,40 +3,41 @@
 open System
 open RestSharp
 open System.Threading
+open System.Threading.Tasks
 
 type Request =
-| GET  of Uri * IRestRequest
-| POST of Uri * IRestRequest
+| GET_Req  of Guid * IRestRequest
+| POST_Req of Guid * IRestRequest
+
+
+type Response =
+| GET_Resp  of Guid * Task<IRestResponse>
+| POST_Resp of Guid * Task<IRestResponse>
+
 //| DEL  of Uri * IRestRequest
 //| PUT  of Uri * IRestRequest
-
-type Response(resp : IRestResponse) =   
-    member x.Content = resp.Content
-    member x.RestResponse = resp
-
+ 
 type IClient =
-    abstract Run : Request -> Async<Response * CancellationTokenSource>
+    abstract Run : CancellationTokenSource -> Request -> Response
 
 module Client =
     let create (url:string) =
-        let runAsync restReq =  async {
-            let client = new RestClient(url)
-            let cancellationTokenSource = new CancellationTokenSource()
-            let! restResponse =  Async.AwaitTask( client.ExecuteTaskAsync(restReq, cancellationTokenSource.Token) )
-            return (Response(restResponse), cancellationTokenSource)
-        }
+        let runAsync (cancellationTokenSource:CancellationTokenSource) restReq = 
+            let client = new RestClient(url) 
+            client.ExecuteTaskAsync(restReq, cancellationTokenSource.Token)
         
         {
             new IClient with
-                member x.Run req =
+                member x.Run cancellationTokenSource req =
                     match req with
-                    | GET(uri, restReq) ->
+                    | GET_Req(id, restReq) ->
                         restReq.Method <- Method.GET
-                        runAsync restReq
-                    | POST(uri, restReq) ->
+                        let resp = runAsync cancellationTokenSource restReq
+                        GET_Resp(id, resp)
+                    | POST_Req(id, restReq) ->
                         restReq.Method <- Method.POST
-                        runAsync restReq
-                     
+                        let resp = runAsync cancellationTokenSource restReq
+                        POST_Resp(id, resp)
                 
         }
     
