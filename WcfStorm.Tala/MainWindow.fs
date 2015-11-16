@@ -16,7 +16,8 @@ type MainWindowViewModel() =
     inherit NotifyBase()
     let requestPayload = HttpPayload()
     let responsePayload = HttpPayload()
-   
+    let mutable isCallInProgress = false
+
     let urls = 
         let temp = ObservableCollection<TargetUrl>()
         temp.Add(TargetUrl(Url="http://www.google.com", IsCallInProgress=false))
@@ -43,6 +44,10 @@ type MainWindowViewModel() =
     member this.Response = responsePayload
     member this.Urls     = urls
     
+    member this.IsCallInProgress 
+        with get() = isCallInProgress
+        and set v = this.RaiseAndSetIfChanged(&isCallInProgress, v, "IsCallInProgress")
+  
     member this.ResponseStatusCode 
         with get() = statusCode
         and set v = this.RaiseAndSetIfChanged(&statusCode, v, "ResponseStatusCode")
@@ -54,16 +59,20 @@ type MainWindowViewModel() =
         
     member this.SendCommand = 
         let run() =
-            let client = Client.create this.TargetUrl.Url
-            let req = GET(Uri("http://www.google.com"), new RestRequest("/"))
-            Async.RunSynchronously (client.Run req)
+            try
+                this.IsCallInProgress <- true
+                let client = Client.create this.TargetUrl.Url
+                let req = GET(Uri("http://www.google.com"), new RestRequest("/"))
+                Async.RunSynchronously (client.Run req)
+            finally
+                 this.IsCallInProgress <- false
            
         let cmd = 
             Command.create 
-                (fun arg -> true) 
+                (fun arg -> not this.IsCallInProgress) 
                 (fun arg -> 
                     let res, cancelToken = run()
-                    this.ResponseStatusCode <- res.RestResponse.StatusCode.ToString() + " " + res.RestResponse.StatusDescription
+                    this.ResponseStatusCode <- "HTTP " + Convert.ToInt32(res.RestResponse.StatusCode).ToString() + " " + res.RestResponse.StatusDescription
                     this.Response.Doc.Text <-  res.Content
                     respHeaders.Clear()
                     res.RestResponse.Headers
