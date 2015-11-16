@@ -33,11 +33,6 @@
                                             <Grid>
                                                 <Border x:Name="Background" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                                 <Grid Margin="1">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="sd" />
-                                                        <Grid>
-                                                        
-                                                    
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type Grid}}}"/>
@@ -54,9 +49,6 @@
                                                     </Button>
                                                     <Rectangle x:Name="BtnArrowBackground" Grid.Column="2" Fill="Transparent" StrokeThickness="0"/>
                                                     <Path x:Name="BtnArrow" Grid.Column="2" Data="F1M301.14,-189.041L311.57,-189.041 306.355,-182.942 301.14,-189.041z" Fill="{DynamicResource GrayBrush1}" HorizontalAlignment="Center" Height="4" IsHitTestVisible="False" Stretch="Uniform" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Width="8"/>
-                                                    </Grid>
-
-                                                    </StackPanel>
                                                 </Grid>
                                             </Grid>
                                             <ControlTemplate.Triggers>
@@ -101,6 +93,18 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0">
+                                <Border.Resources>
+                                    <SolidColorBrush Color="White" x:Key="FillColor" />
+                                </Border.Resources>
+                                <ContentControl Content="{DynamicResource icon_globe}" Width="24" Height="24" />                               
+                            </Border>
+
+                            <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type Grid}}}"/>
@@ -623,6 +627,7 @@
                             <Grid x:Name="ContentSite" Margin="7,0,0,0">
                                 <ContentPresenter ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" Content="{TemplateBinding SelectionBoxItem}" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="False" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                             </Grid>
+                        </Grid>
                         </Grid>
                         <Border x:Name="FocusBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{x:Null}" Grid.ColumnSpan="3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Visibility="Collapsed"/>
                         <Border x:Name="DisabledVisualElement" BorderBrush="{DynamicResource ControlsDisabledBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{DynamicResource ControlsDisabledBrush}" Grid.ColumnSpan="3" IsHitTestVisible="False" Opacity="0.6" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Visibility="Collapsed"/>

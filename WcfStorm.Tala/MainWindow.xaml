@@ -84,7 +84,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Background="#293955" Margin="2,5,2,2" Grid.Row="1">
+        <Grid Background="#293955" Margin="2,4,2,2" Grid.Row="1">
             <!--<ProgressBar Grid.Row="0" VerticalAlignment="Top"  IsIndeterminate="True" Height="5" Margin="0,5,0,0" Visibility="{Binding IsCallInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
 
             <Grid.ColumnDefinitions>
@@ -101,16 +101,16 @@
 
                 <!--URL -->
                 <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" 
-                          SelectedIndex="0"
-                                             IsEditable="True"
+                          DisplayMemberPath="Url"
+                          IsEditable="True"
                           IsReadOnly="False"
-					        SelectedItem="{Binding TargetUrl}" >
+					      Style="{StaticResource ComboBoxStyle1}">
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ComboBoxItem}">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                         </Style>
                     </ComboBox.ItemContainerStyle>
-                    <ComboBox.ItemTemplate>
+                    <!--<ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.Resources>
@@ -120,12 +120,12 @@
                                 <TextBlock Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
 									Visibility="{Binding IsNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
 									Width="{Binding ActualWidth, ElementName=urlBox}"/>
-                                <!--<TextBox Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                --><!--<TextBox Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
 									Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
-									Width="{Binding ActualWidth, ElementName=urlBox}"/>-->
+									Width="{Binding ActualWidth, ElementName=urlBox}"/>--><!--
                             </StackPanel>
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>
+                    </ComboBox.ItemTemplate>-->
                     <!--<ComboBox.Template>
                         <ControlTemplate>
                             <DockPanel  >
