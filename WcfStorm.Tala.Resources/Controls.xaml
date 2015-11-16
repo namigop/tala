@@ -97,9 +97,9 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0">
+                            <Border BorderThickness="0" Grid.Column="0" Background="{TemplateBinding Background}">
                                 <Border.Resources>
-                                    <SolidColorBrush Color="White" x:Key="FillColor" />
+                                    <SolidColorBrush Color="SkyBlue" x:Key="FillColor" />
                                 </Border.Resources>
                                 <ContentControl Content="{DynamicResource icon_globe}" Width="24" Height="24" />                               
                             </Border>
