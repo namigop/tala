@@ -84,7 +84,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid Background="#293955" Margin="2,4,2,2" Grid.Row="1">
+        <Grid Background="#293955" Margin="2,2,2,2" Grid.Row="1">
             <!--<ProgressBar Grid.Row="0" VerticalAlignment="Top"  IsIndeterminate="True" Height="5" Margin="0,5,0,0" Visibility="{Binding IsCallInProgress, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
 
             <Grid.ColumnDefinitions>
@@ -104,6 +104,8 @@
                           DisplayMemberPath="Url"
                           IsEditable="True"
                           IsReadOnly="False"
+                          controls:TextBoxHelper.Watermark="http://"
+                          controls:TextBoxHelper.ClearTextButton="True"
 					      Style="{StaticResource ComboBoxStyle1}">
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ComboBoxItem}">
@@ -140,7 +142,7 @@
                 </ComboBox>
 
                 <!--Request / Response -->
-                <Grid Grid.Row="1" Margin="0,3,0,0">
+                <Grid Grid.Row="1" Margin="0,2,0,0">
                     <Grid.Resources>
                         <Style TargetType="{x:Type GridSplitter}">
                             <Setter Property="Background" Value="LightGray" />
@@ -182,7 +184,8 @@
                                     </Button>
                                     <Label Content="Request Headers" FontSize="14" FontWeight="SemiBold" />
                                 </DockPanel>
-                                <ListBox ItemsSource="{Binding Headers}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding Headers}" CanUserReorderColumns="False" />
+                                <!--<ListBox ItemsSource="{Binding Headers}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -197,7 +200,7 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
-                                </ListBox>
+                                </ListBox>-->
 
                             </Grid>
                         </Grid>
@@ -231,7 +234,8 @@
 
                                 </Grid.RowDefinitions>
                                 <DockPanel Grid.Row="0"  Background="#CFD6E5">
-
+                                    <Border Background="Firebrick" DockPanel.Dock="Bottom" Height="3" 
+                                            Visibility="{Binding HttpCallFailed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     <TextBlock  DockPanel.Dock="Right" HorizontalAlignment="Left"  VerticalAlignment="Center" 
 										Text="{Binding ResponseStatusCode}"
 										FontWeight="SemiBold" FontSize="14"/>

@@ -17,7 +17,7 @@ type HttpHeader() as this =
         and set v = this.RaiseAndSetIfChanged(&value, v, "Value")
 
 
-type HttpHeaders() as this =
+type HttpHeaders() =
     inherit ObservableCollection<HttpHeader>()
     
 //    override this.OnCollectionChanged(args) =

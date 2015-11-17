@@ -17,6 +17,7 @@ type MainWindowViewModel() =
     let requestPayload = HttpPayload()
     let responsePayload = HttpPayload()
     let mutable isCallInProgress = false
+    let mutable httpCallFailed= false
 
     let urls = 
         let temp = ObservableCollection<TargetUrl>()
@@ -44,6 +45,10 @@ type MainWindowViewModel() =
     member this.Response = responsePayload
     member this.Urls     = urls
     
+    member this.HttpCallFailed 
+        with get() = httpCallFailed
+        and set v = this.RaiseAndSetIfChanged(&httpCallFailed, v, "HttpCallFailed")
+  
     member this.IsCallInProgress 
         with get() = isCallInProgress
         and set v = this.RaiseAndSetIfChanged(&isCallInProgress, v, "IsCallInProgress")
@@ -60,7 +65,9 @@ type MainWindowViewModel() =
     member this.SendCommand =
         let processResp (rawResponse:IRestResponse) =
             this.ResponseStatusCode <- "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription
-            this.Response.Doc.Text <-  rawResponse.Content
+            
+            this.HttpCallFailed <- rawResponse.ErrorException <> null
+            this.Response.Doc.Text <- if (rawResponse.ErrorException = null) then rawResponse.Content else rawResponse.ErrorException.ToString()
             this.IsCallInProgress <- false
             respHeaders.Clear()
             rawResponse.Headers
@@ -73,6 +80,7 @@ type MainWindowViewModel() =
             match resp with
             | GET_Resp(id, respTask) ->
                 let! rawResponse = Async.AwaitTask(respTask)
+               
                 return rawResponse
             | POST_Resp(id, respTask) -> 
                 let! rawResponse = Async.AwaitTask(respTask)
@@ -90,6 +98,7 @@ type MainWindowViewModel() =
                 (fun arg -> not this.IsCallInProgress) 
                 (fun arg -> 
                     this.IsCallInProgress <- true
+                    this.HttpCallFailed <- false
                     Async.StartWithContinuations( 
                         run (setup()),
                         (fun r -> processResp r),
