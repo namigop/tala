@@ -44,8 +44,8 @@ type BraceFoldingStrategy() =
 module EditorOptions =
     let braceFolding = BraceFoldingStrategy()
     let xmlFolding = new XmlFoldingStrategy()
-
-    let get mode =
+   
+    let get (mode:HttpContentType) =
         match mode with
-        | "json" -> braceFolding.UpdateFoldings, Resource.jsonHighlightingMode
+        | Json(raw) -> braceFolding.UpdateFoldings, Resource.jsonHighlightingMode
         | _ -> xmlFolding.UpdateFoldings, HighlightingManager.Instance.GetDefinition("XML")

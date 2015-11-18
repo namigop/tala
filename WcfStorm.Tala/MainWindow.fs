@@ -23,6 +23,7 @@ type MainWindowViewModel() =
         let temp = ObservableCollection<TargetUrl>()
         temp.Add(TargetUrl(Url="http://www.google.com", IsCallInProgress=false))
         temp.Add(TargetUrl(Url="http://www.microsoft.com", IsCallInProgress=false))
+        temp.Add(TargetUrl(Url="http://www.reddit.com/r/programming.json", IsCallInProgress=false))
         temp
     let mutable targetUrl = urls.Item(0)
     
@@ -67,7 +68,14 @@ type MainWindowViewModel() =
             this.ResponseStatusCode <- "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription
             
             this.HttpCallFailed <- rawResponse.ErrorException <> null
-            this.Response.Doc.Text <- if (rawResponse.ErrorException = null) then rawResponse.Content else rawResponse.ErrorException.ToString()
+            let rawRespText =
+                if (rawResponse.ErrorException = null) then 
+                    rawResponse.Content 
+                else 
+                    rawResponse.ErrorException.ToString()
+           
+            this.Response.SetText(rawRespText, HttpContentType.Other("").Parse(rawResponse.ContentType))
+            
             this.IsCallInProgress <- false
             respHeaders.Clear()
             rawResponse.Headers
@@ -79,8 +87,7 @@ type MainWindowViewModel() =
         let run resp = async {    
             match resp with
             | GET_Resp(id, respTask) ->
-                let! rawResponse = Async.AwaitTask(respTask)
-               
+                let! rawResponse = Async.AwaitTask(respTask)              
                 return rawResponse
             | POST_Resp(id, respTask) -> 
                 let! rawResponse = Async.AwaitTask(respTask)

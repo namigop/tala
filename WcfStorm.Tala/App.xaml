@@ -110,7 +110,35 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            
+            <Style x:Key="DefaultGridRowStyle" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource MetroDataGridRow}">
+                <Setter Property="DetailsVisibility" Value="Collapsed" />
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}" />
+                    </Trigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="DetailsVisibility">
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="DetailsVisibility">
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.4"  Value="{x:Static Visibility.Collapsed}" />
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <SolidColorBrush Color="Black" x:Key="FillColor" />
             <SolidColorBrush Color="#D6DBE9" x:Key="DefaultBackground" />
         </ResourceDictionary>

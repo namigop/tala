@@ -103,10 +103,11 @@
                 <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" 
                           DisplayMemberPath="Url"
                           IsEditable="True"
+                          SelectedItem="{Binding TargetUrl}"
                           IsReadOnly="False"
                           controls:TextBoxHelper.Watermark="http://"
                           controls:TextBoxHelper.ClearTextButton="True"
-					      Style="{StaticResource ComboBoxStyle1}">
+					      Style="{StaticResource ComboBoxStyle1}" >
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ComboBoxItem}">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
@@ -184,7 +185,9 @@
                                     </Button>
                                     <Label Content="Request Headers" FontSize="14" FontWeight="SemiBold" />
                                 </DockPanel>
-                                <DataGrid Grid.Row="1" ItemsSource="{Binding Headers}" CanUserReorderColumns="False" />
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding Headers}" CanUserReorderColumns="False" 
+                                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                          HeadersVisibility="None"/>
                                 <!--<ListBox ItemsSource="{Binding Headers}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
@@ -238,10 +241,15 @@
                                             Visibility="{Binding HttpCallFailed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     <TextBlock  DockPanel.Dock="Right" HorizontalAlignment="Left"  VerticalAlignment="Center" 
 										Text="{Binding ResponseStatusCode}"
+                                        Margin="0,0,5,0"
 										FontWeight="SemiBold" FontSize="14"/>
                                     <Label Content="Response Headers" FontSize="14" FontWeight="SemiBold" />
                                 </DockPanel>
-                                <ListBox ItemsSource="{Binding ResponseHeaders}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding ResponseHeaders}" CanUserReorderColumns="False" 
+                                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                          HeadersVisibility="None"/>
+                                <!--<ListBox ItemsSource="{Binding ResponseHeaders}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Grid>
@@ -256,7 +264,7 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
-                                </ListBox>
+                                </ListBox>-->
 
                             </Grid>
                         </Grid>

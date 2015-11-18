@@ -57,6 +57,7 @@
     <None Include="App.config" />
     <Content Include="packages.config" />
     <Compile Include="Resource.fs" />
+    <Compile Include="HttpContentType.fs" />
     <Compile Include="RelayCommand.fs" />
     <Compile Include="JsonBraceFolder.fs" />
     <Compile Include="NotifyBase.fs" />
