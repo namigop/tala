@@ -14,4 +14,9 @@ module Resource =
         let stream = res.GetObject("Json") :?> byte array
         let ms = new MemoryStream(stream)
         HighlightingLoader.Load(new XmlTextReader(ms), HighlightingManager.Instance);
-        
+     
+ module Cast =
+    let convert<'T> (o:obj) = 
+        match o with
+        | :? 'T as res -> Some(res)
+        | _ -> None

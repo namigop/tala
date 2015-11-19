@@ -63,26 +63,24 @@ type MainWindowViewModel() =
             (fun arg -> true) 
             (fun arg -> headers.Add(WcfStorm.Tala.HttpHeader(Key="", Value="")))
         
+    member this.RemoveHeaderCommand =
+        let onRun (arg:obj) =
+            match Cast.convert<WcfStorm.Tala.HttpHeader>(arg) with
+            | Some(reqHeader) -> this.Headers.Remove(reqHeader) |> ignore
+            | None -> ()
+        Command.create (fun arg -> true) onRun
+
     member this.SendCommand =
         let processResp (rawResponse:IRestResponse) =
-            this.ResponseStatusCode <- "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription
-            
-            this.HttpCallFailed <- rawResponse.ErrorException <> null
-            let rawRespText =
-                if (rawResponse.ErrorException = null) then 
-                    rawResponse.Content 
-                else 
-                    rawResponse.ErrorException.ToString()
-           
-            this.Response.SetText(rawRespText, HttpContentType.Other("").Parse(rawResponse.ContentType))
-            
+            let processed = Core.processRestResp rawResponse
+            this.ResponseStatusCode <- processed.ResponseCode
+            this.HttpCallFailed <- processed.HttpCallFailed
+            this.Response.SetText(processed.RawResponseText, processed.HttpContentType)
+            this.Response.Mode <- processed.HttpContentType
             this.IsCallInProgress <- false
             respHeaders.Clear()
-            rawResponse.Headers
-                |> Seq.fold(fun (acc:HttpHeaders) i -> 
-                    acc.Add(WcfStorm.Tala.HttpHeader(Key=i.Name, Value=i.Value.ToString()))
-                    acc) respHeaders
-                |> ignore      
+            for h in processed.Headers do
+                respHeaders.Add h
 
         let run resp = async {    
             match resp with
@@ -111,10 +109,5 @@ type MainWindowViewModel() =
                         (fun r -> processResp r),
                         (fun _ -> this.Response.Doc.Text <- "Operation failed."),
                         (fun _ -> this.Response.Doc.Text <- "Operation canceled."))
-                )
-//        let cmd = 
-//            Command.create 
-//                (fun arg -> true) 
-//                (fun arg ->  () )
-//                    
+                )               
         cmd

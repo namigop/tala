@@ -9,12 +9,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     TitlebarHeight="40"
     Title="WcfStorm Tala Community Edition"
-    Height="600" MinWidth="1200" Width="1200"
+    Height="800" MinWidth="1200" Width="1200"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     Style="{DynamicResource CleanWindowStyleKey}"
     ResizeMode="CanResizeWithGrip"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    
+    x:Name="mainWindow"
     >
     <controls:MetroWindow.Background>
         <StaticResource ResourceKey="DefaultBackground"/>
@@ -169,7 +169,7 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
 
                                 </Grid.RowDefinitions>
                                 <DockPanel Grid.Row="0"  Background="#CFD6E5">
@@ -186,24 +186,42 @@
                                     <Label Content="Request Headers" FontSize="14" FontWeight="SemiBold" />
                                 </DockPanel>
                                 <DataGrid Grid.Row="1" ItemsSource="{Binding Headers}" CanUserReorderColumns="False" 
-                                         ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                          HeadersVisibility="None"/>
-                                <!--<ListBox ItemsSource="{Binding Headers}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="2*" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBox Text="{Binding Key}" Grid.Column="0" />
-                                                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                                <TextBox Text="{Binding Value}" Grid.Column="2" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>-->
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          AutoGenerateColumns="False"
+                                          SelectionUnit="FullRow"
+                                          HeadersVisibility="None">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn >                                           
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Key}" 
+                                                             Margin="0"
+                                                             Padding="0"
+                                                              BorderThickness="0"
+                                                             FontWeight="SemiBold"
+                                                             controls:TextBoxHelper.Watermark="HTTP Header" 
+                                                              />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Width="*">
+                                            
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Value}" 
+                                                             BorderThickness="0"
+                                                             Margin="0"
+                                                         Padding="0"
+                                                            controls:TextBoxHelper.ButtonCommand="{Binding ElementName=mainWindow, Path=DataContext.RemoveHeaderCommand}"
+                                                             controls:TextBoxHelper.ButtonCommandParameter="{Binding}"
+                                                             controls:TextBoxHelper.Watermark="Enter a value" 
+                                                             controls:TextBoxHelper.ClearTextButton="True"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                 
 
                             </Grid>
                         </Grid>
@@ -233,7 +251,7 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
 
                                 </Grid.RowDefinitions>
                                 <DockPanel Grid.Row="0"  Background="#CFD6E5">
@@ -247,24 +265,32 @@
                                 </DockPanel>
                                 
                                 <DataGrid Grid.Row="1" ItemsSource="{Binding ResponseHeaders}" CanUserReorderColumns="False" 
-                                          ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                          HeadersVisibility="None"/>
-                                <!--<ListBox ItemsSource="{Binding ResponseHeaders}" Grid.Row="1" Margin="0,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" MaxWidth="100" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="2*" />
-                                                </Grid.ColumnDefinitions>
-                                                <TextBox Text="{Binding Key}" Grid.Column="0" IsReadOnly="True" />
-                                                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                                <TextBox Text="{Binding Value}" Grid.Column="2" IsReadOnly="True" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>-->
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                          HeadersVisibility="None"
+                                          AutoGenerateColumns="False" >
+
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Key}" FontWeight="SemiBold" Margin="5,0,0,0"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Width="*">
+
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Value}" TextWrapping="Wrap"                                                
+                                                             Margin="0"
+                                                             />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                 
 
                             </Grid>
                         </Grid>

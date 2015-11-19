@@ -9,13 +9,14 @@ open System.Xml
 open ICSharpCode.AvalonEdit.Document
 open ICSharpCode.AvalonEdit.Folding
 open Newtonsoft.Json
+
 type HttpPayload() =
     inherit NotifyBase()
     let mutable highlighting = Resource.jsonHighlightingMode
-    let mutable mode = "json"
+    let mutable mode = HttpContentType.Json("text/json")
     let mutable doc = TextDocument(Text="Foo")
     let mutable foldFunction = 
-        let folding, _ = EditorOptions.get (HttpContentType.Json("text/json"))
+        let folding, _ = EditorOptions.get mode
         folding
   
     let prettyPrintJson(json) =
@@ -32,10 +33,12 @@ type HttpPayload() =
     member this.Mode 
         with get() = mode
         and set v =
-            let folding, highlighting2 = EditorOptions.get (HttpContentType.Json(v))
+            let folding, highlighting2 =  EditorOptions.get v
+            
             this.Highlighting <- highlighting2
             foldFunction <- folding 
     member this.Highlighting 
+
         with get () = highlighting
         and set v = this.RaiseAndSetIfChanged(&highlighting, v, "Highlighting")
     
