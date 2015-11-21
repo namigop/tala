@@ -44,7 +44,8 @@ type MainWindowViewModel() =
     member this.Response = responsePayload
     member this.Urls     = urls
     member this.NewTargetUrl 
-        with set v =
+        with get() = this.TargetUrl
+        and set v =
             if (String.IsNullOrWhiteSpace(this.TargetUrl) && not(String.IsNullOrWhiteSpace(v))) then
                 urls.Add v
                 this.TargetUrl <- if v.StartsWith("http://") then v else "http://" + v
@@ -90,10 +91,16 @@ type MainWindowViewModel() =
             (fun arg -> 
                 this.IsCallInProgress <- true
                 this.HttpCallFailed <- false
+               
+
                 Async.StartWithContinuations( 
                     Core.runAsync this.TargetUrl "/" ,
                     (fun r -> processResp r),
-                    (fun _ -> this.Response.Doc.Text <- "Operation failed."),
-                    (fun _ -> this.Response.Doc.Text <- "Operation canceled."))
+                    (fun d -> 
+                        this.IsCallInProgress <- false
+                        this.Response.Doc.Text <- d.Message),
+                    (fun s -> 
+                        
+                        this.Response.Doc.Text <- "Operation canceled."))
             )               
       

@@ -105,7 +105,7 @@
                           SelectedItem="{Binding TargetUrl}"
                           Text="{Binding NewTargetUrl, UpdateSourceTrigger=LostFocus}"
                           IsReadOnly="False"
-                          
+                          AllowDrop="True"
                           controls:TextBoxHelper.Watermark="http://"
                           controls:TextBoxHelper.ClearTextButton="True"
                           Style="{StaticResource ComboBoxStyle1}" 
@@ -115,33 +115,7 @@
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                         </Style>
                     </ComboBox.ItemContainerStyle>
-                    <!--<ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel.Resources>
-                                    <SolidColorBrush Color="SkyBlue" x:Key="FillColor" />
-                                </StackPanel.Resources>
-                                <ContentControl Content="{StaticResource icon_globe}" Width="16" Height="16" Background="WhiteSmoke" Margin="2" />
-                                <TextBlock Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-									Visibility="{Binding IsNotSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
-									Width="{Binding ActualWidth, ElementName=urlBox}"/>
-                                --><!--<TextBox Text="{Binding Url}" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-									Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
-									Width="{Binding ActualWidth, ElementName=urlBox}"/>--><!--
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>-->
-                    <!--<ComboBox.Template>
-                        <ControlTemplate>
-                            <DockPanel  >
-                                <DockPanel.Resources>
-                                    <SolidColorBrush Color="White" x:Key="FillColor" />
-                                </DockPanel.Resources>
-                                <ContentControl Content="{StaticResource icon_globe}" Width="24" Height="24" Background="WhiteSmoke" Margin="5" />
-                                <TextBox Text="http://" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-                            </DockPanel>
-                        </ControlTemplate>
-                    </ComboBox.Template>-->
+                     
                 </ComboBox>
 
                 <!--Request / Response -->
@@ -262,8 +236,14 @@
                                     <TextBlock  DockPanel.Dock="Right" HorizontalAlignment="Left"  VerticalAlignment="Center" 
 										Text="{Binding ResponseStatusCode}"
                                         Margin="0,0,5,0"
-										FontWeight="SemiBold" FontSize="14"/>
+										FontWeight="SemiBold" FontSize="14"/> 
+                                   
                                     <Label Content="Response Headers" FontSize="14" FontWeight="SemiBold" />
+                                    <ProgressBar 
+                                            Visibility="{Binding IsCallInProgress, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                            IsIndeterminate="True" 
+                                            Width="100"/>
+                                    <Border />
                                 </DockPanel>
                                 
                                 <DataGrid Grid.Row="1" ItemsSource="{Binding ResponseHeaders}" CanUserReorderColumns="False" 

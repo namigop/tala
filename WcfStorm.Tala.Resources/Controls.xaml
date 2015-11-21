@@ -99,6 +99,14 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
+                            <!--<Button Command="{Binding SendCommand}" Grid.Column="0" BorderThickness="0" Background="Transparent">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.Resources>
+                                        <SolidColorBrush Color="Green" x:Key="FillColor" />
+                                    </StackPanel.Resources>
+                                    <ContentControl Content="{StaticResource icon_play}" Width="16" Height="16" Padding="0" />
+                                </StackPanel>
+                            </Button>-->
                             <Border BorderThickness="0" Grid.Column="0" Background="{TemplateBinding Background}">
                                 <Border.Resources>
                                     <SolidColorBrush Color="SkyBlue" x:Key="FillColor" />

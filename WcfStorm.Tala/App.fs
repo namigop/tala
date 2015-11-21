@@ -51,5 +51,7 @@ module main =
 
 
         Application.Current.DispatcherUnhandledException 
-        |> Observable.add(fun f -> MessageBox.Show(f.Exception.ToString()) |> ignore )
+        |> Observable.add(fun f -> 
+            f.Handled <- true
+            MessageBox.Show(f.Exception.ToString()) |> ignore )
         app.Root.Run()
