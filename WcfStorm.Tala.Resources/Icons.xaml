@@ -72,4 +72,18 @@
                     Fill="{DynamicResource FillColor}" />
         </Canvas>
     </Viewbox>
+
+    <Viewbox x:Key="icon_text">
+        <Canvas Width="24" Height="24">
+            <Path Data="M14,10H19.5L14,4.5V10M5,3H15L21,9V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3M5,12V14H19V12H5M5,16V18H14V16H5Z" 
+                    Fill="{DynamicResource FillColor}"  />
+        </Canvas>
+    </Viewbox>
+
+    <Viewbox x:Key="icon_table">
+        <Canvas Width="24" Height="24">
+            <Path Data="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z" 
+                   Fill="{DynamicResource FillColor}" />
+        </Canvas>
+    </Viewbox>
 </ResourceDictionary>

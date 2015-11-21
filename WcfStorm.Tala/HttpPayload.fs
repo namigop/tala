@@ -20,12 +20,15 @@ type HttpPayload() =
         folding
   
     let prettyPrintJson(json) =
-        use stringReader = new StringReader(json)
-        use stringWriter = new StringWriter()
-        use jsonReader = new JsonTextReader(stringReader)
-        use jsonWriter = new JsonTextWriter(stringWriter, Formatting = Formatting.Indented)
-        jsonWriter.WriteToken(jsonReader);
-        stringWriter.ToString();
+        try
+            use stringReader = new StringReader(json)
+            use stringWriter = new StringWriter()
+            use jsonReader = new JsonTextReader(stringReader)
+            use jsonWriter = new JsonTextWriter(stringWriter, Formatting = Formatting.Indented)
+            jsonWriter.WriteToken(jsonReader)
+            stringWriter.ToString()
+        with
+        | _ -> json
         
     let prettyPrintXml(xml) =
         xml

@@ -31,10 +31,19 @@ module Core =
           RawResponseText = rawRespText
           Headers = respHeaders }
     
+    let createRequest  (verb:Method) (httpParams: HttpParam seq)= 
+        let req = RestRequest(verb)
+        for pr in httpParams do
+            req.AddParameter(pr.Name, pr.Value, pr.ParameterType) |> ignore
+        req
+        
 
-    let runAsync url (resource:string) = 
+    let createGetRequest = createRequest Method.GET
+  //  let createPutRequest = createRequest Method.PUT
+
+    let runAsync url (resource:string) (httpParams : HttpParam seq)= 
         let client = Client.create url
-        let req = GET_Req(Guid.NewGuid(), new RestRequest(resource))
+        let req = GET_Req(Guid.NewGuid(), createGetRequest httpParams)
         let cancel = new CancellationTokenSource()
         let execute() = async {    
             match client.Run cancel req with
@@ -46,4 +55,15 @@ module Core =
                 return rawResponse
             }
         execute()
+
+    let getUri rawUrl =
+        try
+            if (not(String.IsNullOrWhiteSpace(rawUrl))) then
+                let url = if rawUrl.StartsWith("http://") then rawUrl else "http://" + rawUrl
+                Some(new Uri(url))
+            else
+                None
+        with
+        | _ -> None
+
        

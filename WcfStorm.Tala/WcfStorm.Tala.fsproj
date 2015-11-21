@@ -63,6 +63,7 @@
     <Compile Include="NotifyBase.fs" />
     <Compile Include="TargetUrl.fs" />
     <Compile Include="Client.fs" />
+    <Compile Include="HttpParam.fs" />
     <Compile Include="HttpPayload.fs" />
     <Compile Include="HttpHeaders.fs" />
     <Compile Include="Core.fs" />

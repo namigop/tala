@@ -102,8 +102,8 @@
                 <!--URL   SelectedItem="{Binding TargetUrl}" -->
                 <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}"                           
                           IsEditable="True"
-                          SelectedItem="{Binding TargetUrl}"
-                          Text="{Binding NewTargetUrl, UpdateSourceTrigger=LostFocus}"
+                           
+                          Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
                           IsReadOnly="False"
                           AllowDrop="True"
                           controls:TextBoxHelper.Watermark="http://"
@@ -150,17 +150,20 @@
                                 </Grid.RowDefinitions>
                                 <DockPanel Grid.Row="0"  Background="#CFD6E5">
 
-                                    <Button BorderThickness="0"  Style="{DynamicResource SquareButtonStyle}" Background="Transparent" DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestHeaderCommand}">
+                                    <Button Margin="1" BorderThickness="0.6"    DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestHeaderCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel.Resources>
-                                                <SolidColorBrush Color="Navy" x:Key="FillColor" />
+                                                <SolidColorBrush Color="Blue" x:Key="FillColor" />
                                             </StackPanel.Resources>
                                             <ContentControl Content="{StaticResource icon_plus}" Width="16" Height="16" />
 
                                         </StackPanel>
+                                        
                                     </Button>
                                     <Label Content="Request Headers" FontSize="14" FontWeight="SemiBold" />
                                 </DockPanel>
+                                
+                                <!-- Editor for the Request Header -->
                                 <DataGrid Grid.Row="1" ItemsSource="{Binding RequestHeaders}" CanUserReorderColumns="False" 
                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           AutoGenerateColumns="False"
@@ -174,14 +177,13 @@
                                                              Margin="0"
                                                              Padding="0"
                                                               BorderThickness="0"
-                                                             FontWeight="SemiBold"
+                                                           
                                                              controls:TextBoxHelper.Watermark="HTTP Header" 
                                                               />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridTemplateColumn Width="*">
-                                            
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBox Text="{Binding Value}" 
@@ -207,12 +209,119 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Border Grid.Row="0"  Background="#CFD6E5">
+                            <DockPanel Grid.Row="0"  Background="#CFD6E5">
+                                <Button Margin="1" BorderThickness="0.6"    DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestParameterCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Resources>
+                                            <SolidColorBrush Color="Blue" x:Key="FillColor" />
+                                        </StackPanel.Resources>
+                                        <ContentControl Content="{StaticResource icon_plus}" Width="16" Height="16" />
+
+                                    </StackPanel>
+
+                                </Button>
                                 <Label Content="Request Body" FontSize="14" FontWeight="SemiBold" />
-                            </Border>
-                            <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt" 
-								SyntaxHighlighting="{Binding Request.Highlighting}"
-								Document="{Binding Request.Doc}"/>
+                            </DockPanel>
+                            <TabControl Grid.Row="1" TabStripPlacement="Left" controls:TabControlHelper.IsUnderlined="True">
+                               
+                                <TabControl.Resources>
+                                    <Style TargetType="{x:Type TabItem}"
+                                       BasedOn="{StaticResource {x:Type TabItem}}">
+                                        <Setter Property="HeaderTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>                                                  
+                                                    <!--<ContentPresenter Content="{TemplateBinding Content}">
+                                                        <ContentPresenter.LayoutTransform>
+                                                            <RotateTransform Angle="270" />
+                                                        </ContentPresenter.LayoutTransform>
+                                                    </ContentPresenter>-->
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                                        <StackPanel.LayoutTransform>
+                                                            <RotateTransform Angle="270" />
+                                                        </StackPanel.LayoutTransform>
+                                                        <!--<StackPanel.Resources>
+                                                            <SolidColorBrush x:Key="FillColor" Color="{StaticResource AccentColor2}" />
+                                                        </StackPanel.Resources>
+                                                        <ContentControl Content="{DynamicResource tabIcon}"  Width="20" Height="20"/>-->
+                                                        <TextBlock Text="{Binding}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TabControl.Resources>
+                                <TabItem Header="Parameters" controls:ControlsHelper.HeaderFontSize="15">
+                                    <TabItem.Resources>
+                                        <ContentControl x:Key="tabIcon" Content="{StaticResource icon_table}"   />
+                                    </TabItem.Resources>
+
+                                    <DataGrid  ItemsSource="{Binding RequestParameters}" CanUserReorderColumns="False" 
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          AutoGenerateColumns="False"
+                                          SelectionUnit="FullRow"
+                                          HeadersVisibility="None">
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox SelectedItem="{Binding ParameterType, UpdateSourceTrigger=PropertyChanged}" 
+                                                                  ItemsSource="{Binding ElementName=mainWindow, Path=DataContext.ParameterTypeSelection}" 
+                                                             BorderThickness="0"
+                                                             Margin="0"
+                                                             controls:TextBoxHelper.Watermark="Paramter type" 
+                                                         Padding="0"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn >
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Name}" 
+                                                             Margin="0"
+                                                             Padding="0"
+                                                              BorderThickness="0"
+                                                             
+                                                             controls:TextBoxHelper.Watermark="Parameter name" 
+                                                              />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
+                                            <DataGridTemplateColumn Width="*">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Text="{Binding Value}" 
+                                                             BorderThickness="0"
+                                                             Margin="0"
+                                                         Padding="0"
+                                                            controls:TextBoxHelper.ButtonCommand="{Binding ElementName=mainWindow, Path=DataContext.RemoveRequestParameterCommand}"
+                                                             controls:TextBoxHelper.ButtonCommandParameter="{Binding}"
+                                                             controls:TextBoxHelper.Watermark="Parameter value" 
+                                                             controls:TextBoxHelper.ClearTextButton="True"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                </TabItem>
+
+                                <TabItem Header="Body" FontSize="9"  controls:ControlsHelper.HeaderFontSize="15" >
+                                    <TabItem.Resources>
+                                        
+                                        <ContentControl x:Key="tabIcon" Content="{StaticResource icon_text}"/>
+                                    </TabItem.Resources>
+                                    
+                                    <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt" 
+								        SyntaxHighlighting="{Binding Request.Highlighting}"
+								        Document="{Binding Request.Doc}"/>
+                                </TabItem>
+                                      <!--<TabItem Header="s">
+
+                                </TabItem>-->
+                            </TabControl>
+                          
                         </Grid>
                     </Grid>
 

@@ -26,29 +26,36 @@ type MainWindowViewModel() =
     let mutable targetUrl = urls.Item(0)
     
     let respHeaders = HttpHeaders()
+    let reqParams = HttpParams()
     let headers = 
         let temp = HttpHeaders()
         temp.Add(WcfStorm.Tala.HttpHeader(Key="User-Agent", Value="WcfStorm.Rest/2.2.0 (.NET4.0);support@wcfstorm.com"))
         temp.Add(WcfStorm.Tala.HttpHeader(Key="Content-Type", Value="application/json"))
         temp
-
+    let parameterTypeSelection =
+        let temp = new ObservableCollection<ParameterType>()
+        temp.Add(ParameterType.UrlSegment)
+        temp.Add(ParameterType.GetOrPost)
+        temp
     let mutable statusCode = ""
 
     member this.TargetUrl 
         with get() = targetUrl
         and set v = this.RaiseAndSetIfChanged(&targetUrl, v, "TargetUrl")
   
+    member this.RequestParameters  = reqParams
     member this.RequestHeaders  = headers
     member this.ResponseHeaders = respHeaders
     member this.Request  = requestPayload
     member this.Response = responsePayload
     member this.Urls     = urls
-    member this.NewTargetUrl 
-        with get() = this.TargetUrl
-        and set v =
-            if (String.IsNullOrWhiteSpace(this.TargetUrl) && not(String.IsNullOrWhiteSpace(v))) then
-                urls.Add v
-                this.TargetUrl <- if v.StartsWith("http://") then v else "http://" + v
+    member this.ParameterTypeSelection = parameterTypeSelection
+//    member this.NewTargetUrl 
+//        with get() = this.TargetUrl
+//        and set v =
+//            if (String.IsNullOrWhiteSpace(this.TargetUrl) && not(String.IsNullOrWhiteSpace(v))) then
+//                urls.Add v
+//                this.TargetUrl <- if v.StartsWith("http://") then v else "http://" + v
                 
     member this.HttpCallFailed 
         with get() = httpCallFailed
@@ -64,16 +71,29 @@ type MainWindowViewModel() =
 
     member this.AddRequestHeaderCommand =
         Command.create 
-            (fun arg -> true) 
+            (fun arg -> not this.IsCallInProgress) 
             (fun arg -> headers.Add(WcfStorm.Tala.HttpHeader(Key="", Value="")))
-        
+
+    member this.AddRequestParameterCommand =
+        Command.create 
+            (fun arg -> not this.IsCallInProgress) 
+            (fun arg -> this.RequestParameters.Add(HttpParam(Name="", Value="")))
+
     member this.RemoveHeaderCommand =
         let onRun (arg:obj) =
             match Cast.convert<WcfStorm.Tala.HttpHeader>(arg) with
             | Some(reqHeader) -> this.RequestHeaders.Remove(reqHeader) |> ignore
             | None -> ()
-        Command.create (fun arg -> true) onRun
+        Command.create (fun arg -> not this.IsCallInProgress) onRun
+    
+    member this.RemoveRequestParameterCommand =
+        let onRun (arg:obj) =
+            match Cast.convert<WcfStorm.Tala.HttpParam>(arg) with
+            | Some(reqParam) -> this.RequestParameters.Remove(reqParam) |> ignore
+            | None -> ()
 
+        Command.create (fun arg -> not this.IsCallInProgress) onRun
+  
     member this.SendCommand =
         let processResp (rawResponse:IRestResponse) =
             let processed = Core.processRestResp rawResponse
@@ -85,22 +105,28 @@ type MainWindowViewModel() =
             respHeaders.Clear()
             for h in processed.Headers do
                 respHeaders.Add h
-      
+        let canRun arg = not this.IsCallInProgress
+        let onOk resp = processResp resp
+        let onError exc =
+            this.IsCallInProgress <- false
+            this.Response.Doc.Text <- exc.ToString()
+        let onCancel arg =  this.Response.Doc.Text <- "Operation canceled."
+
+        let getTargetUrl() =
+            match Core.getUri this.TargetUrl with
+            | Some(uri) ->
+                if not (urls.Contains(uri.AbsoluteUri))  then
+                    urls.Add (uri.AbsoluteUri.TrimEnd('/'))
+                uri.AbsoluteUri
+            | None -> ""
+
         Command.create 
-            (fun arg -> not this.IsCallInProgress) 
+            canRun
             (fun arg -> 
                 this.IsCallInProgress <- true
                 this.HttpCallFailed <- false
-               
-
                 Async.StartWithContinuations( 
-                    Core.runAsync this.TargetUrl "/" ,
-                    (fun r -> processResp r),
-                    (fun d -> 
-                        this.IsCallInProgress <- false
-                        this.Response.Doc.Text <- d.Message),
-                    (fun s -> 
-                        
-                        this.Response.Doc.Text <- "Operation canceled."))
-            )               
-      
+                    Core.runAsync (getTargetUrl()) "/"  this.RequestParameters,
+                    onOk,
+                    onError,
+                    onCancel))
