@@ -14,7 +14,7 @@
     Style="{DynamicResource CleanWindowStyleKey}"
     ResizeMode="CanResizeWithGrip"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    x:Name="mainWindow"
+    x:Name="mainWindow"    
     >
     <controls:MetroWindow.Background>
         <StaticResource ResourceKey="DefaultBackground"/>
@@ -99,15 +99,17 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!--URL -->
-                <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}" 
-                          DisplayMemberPath="Url"
+                <!--URL   SelectedItem="{Binding TargetUrl}" -->
+                <ComboBox x:Name="urlBox" Grid.Row="0" Background="White" ItemsSource="{Binding Urls}"                           
                           IsEditable="True"
                           SelectedItem="{Binding TargetUrl}"
+                          Text="{Binding NewTargetUrl, UpdateSourceTrigger=LostFocus}"
                           IsReadOnly="False"
+                          
                           controls:TextBoxHelper.Watermark="http://"
                           controls:TextBoxHelper.ClearTextButton="True"
-					      Style="{StaticResource ComboBoxStyle1}" >
+                          Style="{StaticResource ComboBoxStyle1}" 
+					     >
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ComboBoxItem}">
                             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
@@ -185,7 +187,7 @@
                                     </Button>
                                     <Label Content="Request Headers" FontSize="14" FontWeight="SemiBold" />
                                 </DockPanel>
-                                <DataGrid Grid.Row="1" ItemsSource="{Binding Headers}" CanUserReorderColumns="False" 
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding RequestHeaders}" CanUserReorderColumns="False" 
                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           AutoGenerateColumns="False"
                                           SelectionUnit="FullRow"

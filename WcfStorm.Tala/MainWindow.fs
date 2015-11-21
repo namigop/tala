@@ -10,8 +10,6 @@ open System.Net
 
 type MainWindow = XAML<"MainWindow.xaml">
  
-   
-
 type MainWindowViewModel() =
     inherit NotifyBase()
     let requestPayload = HttpPayload()
@@ -20,10 +18,10 @@ type MainWindowViewModel() =
     let mutable httpCallFailed= false
 
     let urls = 
-        let temp = ObservableCollection<TargetUrl>()
-        temp.Add(TargetUrl(Url="http://www.google.com", IsCallInProgress=false))
-        temp.Add(TargetUrl(Url="http://www.microsoft.com", IsCallInProgress=false))
-        temp.Add(TargetUrl(Url="http://www.reddit.com/r/programming.json", IsCallInProgress=false))
+        let temp = ObservableCollection<string>()
+        temp.Add("http://www.google.com")
+        temp.Add("http://www.microsoft.com")
+        temp.Add("http://www.reddit.com/r/programming.json")
         temp
     let mutable targetUrl = urls.Item(0)
     
@@ -40,12 +38,17 @@ type MainWindowViewModel() =
         with get() = targetUrl
         and set v = this.RaiseAndSetIfChanged(&targetUrl, v, "TargetUrl")
   
-    member this.Headers  = headers
+    member this.RequestHeaders  = headers
     member this.ResponseHeaders = respHeaders
     member this.Request  = requestPayload
     member this.Response = responsePayload
     member this.Urls     = urls
-    
+    member this.NewTargetUrl 
+        with set v =
+            if (String.IsNullOrWhiteSpace(this.TargetUrl) && not(String.IsNullOrWhiteSpace(v))) then
+                urls.Add v
+                this.TargetUrl <- if v.StartsWith("http://") then v else "http://" + v
+                
     member this.HttpCallFailed 
         with get() = httpCallFailed
         and set v = this.RaiseAndSetIfChanged(&httpCallFailed, v, "HttpCallFailed")
@@ -66,7 +69,7 @@ type MainWindowViewModel() =
     member this.RemoveHeaderCommand =
         let onRun (arg:obj) =
             match Cast.convert<WcfStorm.Tala.HttpHeader>(arg) with
-            | Some(reqHeader) -> this.Headers.Remove(reqHeader) |> ignore
+            | Some(reqHeader) -> this.RequestHeaders.Remove(reqHeader) |> ignore
             | None -> ()
         Command.create (fun arg -> true) onRun
 
@@ -81,33 +84,16 @@ type MainWindowViewModel() =
             respHeaders.Clear()
             for h in processed.Headers do
                 respHeaders.Add h
-
-        let run resp = async {    
-            match resp with
-            | GET_Resp(id, respTask) ->
-                let! rawResponse = Async.AwaitTask(respTask)              
-                return rawResponse
-            | POST_Resp(id, respTask) -> 
-                let! rawResponse = Async.AwaitTask(respTask)
-                return rawResponse
-        } 
-           
-        let setup() =                
-            let client = Client.create this.TargetUrl.Url
-            let req = GET_Req(Guid.NewGuid(), new RestRequest("/"))
-            let cancel = new CancellationTokenSource()
-            (client.Run cancel req)
-             
-        let cmd = 
-            Command.create 
-                (fun arg -> not this.IsCallInProgress) 
-                (fun arg -> 
-                    this.IsCallInProgress <- true
-                    this.HttpCallFailed <- false
-                    Async.StartWithContinuations( 
-                        run (setup()),
-                        (fun r -> processResp r),
-                        (fun _ -> this.Response.Doc.Text <- "Operation failed."),
-                        (fun _ -> this.Response.Doc.Text <- "Operation canceled."))
-                )               
-        cmd
+      
+        Command.create 
+            (fun arg -> not this.IsCallInProgress) 
+            (fun arg -> 
+                this.IsCallInProgress <- true
+                this.HttpCallFailed <- false
+                Async.StartWithContinuations( 
+                    Core.runAsync this.TargetUrl "/" ,
+                    (fun r -> processResp r),
+                    (fun _ -> this.Response.Doc.Text <- "Operation failed."),
+                    (fun _ -> this.Response.Doc.Text <- "Operation canceled."))
+            )               
+      

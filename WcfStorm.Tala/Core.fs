@@ -30,3 +30,20 @@ module Core =
           HttpContentType = getContentType(rawResponse.ContentType)
           RawResponseText = rawRespText
           Headers = respHeaders }
+    
+
+    let runAsync url (resource:string) = 
+        let client = Client.create url
+        let req = GET_Req(Guid.NewGuid(), new RestRequest(resource))
+        let cancel = new CancellationTokenSource()
+        let execute() = async {    
+            match client.Run cancel req with
+            | GET_Resp(id, respTask) ->
+                let! rawResponse = Async.AwaitTask(respTask)              
+                return rawResponse
+            | POST_Resp(id, respTask) -> 
+                let! rawResponse = Async.AwaitTask(respTask)
+                return rawResponse
+            }
+        execute()
+       

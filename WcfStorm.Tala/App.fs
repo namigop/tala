@@ -26,9 +26,7 @@ module main =
                 if not (!isSetup) then                   
                     isSetup := true
                     let window = app.Root.MainWindow
-                    let vm = window.DataContext :?> MainWindowViewModel
-                    
-                   
+                    let vm = window.DataContext :?> MainWindowViewModel                 
                     let textEditorRequest  = app.Root.MainWindow.FindName("textEditorRequest") :?> TextEditor
                     let textEditorResponse  = app.Root.MainWindow.FindName("textEditorResponse") :?> TextEditor
                     let reqFoldingManager =  FoldingManager.Install(textEditorRequest.TextArea); 
@@ -47,10 +45,9 @@ module main =
                                     vm.Response.FoldFunction(respFoldingManager, vm.Response.Doc)
                             )
                         temp
-
                     timer.Start()
                      
-                    ) 
+                ) 
 
 
         Application.Current.DispatcherUnhandledException 
