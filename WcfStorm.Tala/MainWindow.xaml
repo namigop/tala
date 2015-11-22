@@ -24,7 +24,7 @@
     </controls:MetroWindow.DataContext>
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
-            <Button Command="{Binding SendCommand}">
+            <!--<Button Command="{Binding SendCommand}">
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.Resources>
                         <SolidColorBrush Color="Green" x:Key="FillColor" />
@@ -32,8 +32,8 @@
                     <ContentControl Content="{StaticResource icon_play}" Width="24" Height="24" />
                     <TextBlock Text="send"  VerticalAlignment="Center" />
                 </StackPanel>
-            </Button>
-            <Button Content="cookies" />
+            </Button>-->
+            <!--<Button Content="cookies" />-->
             <Button>
                 <StackPanel Orientation="Horizontal">
                     <ContentControl Content="{StaticResource icon_gear}" Width="24" Height="24" />
@@ -150,12 +150,15 @@
                                 </Grid.RowDefinitions>
                                 <DockPanel Grid.Row="0"  Background="#CFD6E5">
 
-                                    <Button Margin="1" BorderThickness="0.6"    DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestHeaderCommand}">
+                                    <Button Padding="0" Margin="1" BorderThickness="0.6"    DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestHeaderCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel.Resources>
                                                 <SolidColorBrush Color="Blue" x:Key="FillColor" />
                                             </StackPanel.Resources>
-                                            <ContentControl Content="{StaticResource icon_plus}" Width="16" Height="16" />
+
+                                            <Viewbox Width="20" Height="20" Margin="2">
+                                                <ContentControl Content="{DynamicResource icon_plus}" />
+                                            </Viewbox>
 
                                         </StackPanel>
                                         
@@ -165,6 +168,7 @@
                                 
                                 <!-- Editor for the Request Header -->
                                 <DataGrid Grid.Row="1" ItemsSource="{Binding RequestHeaders}" CanUserReorderColumns="False" 
+                                          CanUserAddRows="False"
                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           AutoGenerateColumns="False"
                                           SelectionUnit="FullRow"
@@ -173,12 +177,12 @@
                                         <DataGridTemplateColumn >                                           
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBox Text="{Binding Key}" 
+                                                    <TextBox Text="{Binding Key,  UpdateSourceTrigger=PropertyChanged}" 
                                                              Margin="0"
                                                              Padding="0"
                                                               BorderThickness="0"
                                                            
-                                                             controls:TextBoxHelper.Watermark="HTTP Header" 
+                                                             controls:TextBoxHelper.Watermark="Header name" 
                                                               />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -186,13 +190,13 @@
                                         <DataGridTemplateColumn Width="*">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBox Text="{Binding Value}" 
+                                                    <TextBox Text="{Binding Value,  UpdateSourceTrigger=PropertyChanged}" 
                                                              BorderThickness="0"
                                                              Margin="0"
                                                          Padding="0"
                                                             controls:TextBoxHelper.ButtonCommand="{Binding ElementName=mainWindow, Path=DataContext.RemoveHeaderCommand}"
                                                              controls:TextBoxHelper.ButtonCommandParameter="{Binding}"
-                                                             controls:TextBoxHelper.Watermark="Enter a value" 
+                                                             controls:TextBoxHelper.Watermark="Header value" 
                                                              controls:TextBoxHelper.ClearTextButton="True"/>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -210,12 +214,16 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <DockPanel Grid.Row="0"  Background="#CFD6E5">
-                                <Button Margin="1" BorderThickness="0.6"    DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestParameterCommand}">
+                                <Button Padding="0" Margin="1" BorderThickness="0.6"    DockPanel.Dock="Right" HorizontalAlignment="Left"  Command="{Binding AddRequestParameterCommand}">
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel.Resources>
                                             <SolidColorBrush Color="Blue" x:Key="FillColor" />
                                         </StackPanel.Resources>
-                                        <ContentControl Content="{StaticResource icon_plus}" Width="16" Height="16" />
+
+                                        <Viewbox Width="20" Height="20" Margin="2">
+                                            <ContentControl Content="{DynamicResource icon_plus}" />
+                                        </Viewbox>
+
 
                                     </StackPanel>
 
@@ -256,19 +264,22 @@
                                     </TabItem.Resources>
 
                                     <DataGrid  ItemsSource="{Binding RequestParameters}" CanUserReorderColumns="False" 
+                                               CanUserAddRows="False"
                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                                           AutoGenerateColumns="False"
                                           SelectionUnit="FullRow"
                                           HeadersVisibility="None">
                                         <DataGrid.Columns>
-                                            <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn Width="120">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <ComboBox SelectedItem="{Binding ParameterType, UpdateSourceTrigger=PropertyChanged}" 
                                                                   ItemsSource="{Binding ElementName=mainWindow, Path=DataContext.ParameterTypeSelection}" 
                                                              BorderThickness="0"
+                                                                  IsEditable="False"
+                                                                  IsReadOnly="True"
                                                              Margin="0"
-                                                             controls:TextBoxHelper.Watermark="Paramter type" 
+                                                             controls:TextBoxHelper.Watermark="Parameter type" 
                                                          Padding="0"/>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -276,7 +287,7 @@
                                             <DataGridTemplateColumn >
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding Name}" 
+                                                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" 
                                                              Margin="0"
                                                              Padding="0"
                                                               BorderThickness="0"
@@ -290,7 +301,7 @@
                                             <DataGridTemplateColumn Width="*">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox Text="{Binding Value}" 
+                                                        <TextBox Text="{Binding Value,  UpdateSourceTrigger=PropertyChanged}" 
                                                              BorderThickness="0"
                                                              Margin="0"
                                                          Padding="0"

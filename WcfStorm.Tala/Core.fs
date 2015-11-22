@@ -7,6 +7,7 @@ open System.Collections.ObjectModel
 open System.Net
 open System.Threading
 open Xceed.Wpf.Toolkit
+open System.Diagnostics
 
 type ProcessedResponse =
     { ResponseCode : string
@@ -16,9 +17,11 @@ type ProcessedResponse =
       Headers : WcfStorm.Tala.HttpHeader seq }
 
 module Core =
+    
     let getContentType rawContentType = HttpContentType.Other("").Parse(rawContentType)
-    let processRestResp (rawResponse : IRestResponse) =
-        let respCode = "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription
+    let processRestResp (rawResponse : IRestResponse) (elapsed:TimeSpan) =
+        let elapsedText = " (Elapsed: " + elapsed.TotalMilliseconds.ToString() + " ms)"
+        let respCode = "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription + elapsedText
 
         let rawRespText =
             if (rawResponse.ErrorException = null) then rawResponse.Content
@@ -31,28 +34,38 @@ module Core =
           RawResponseText = rawRespText
           Headers = respHeaders }
     
-    let createRequest  (verb:Method) (httpParams: HttpParam seq)= 
-        let req = RestRequest(verb)
-        for pr in httpParams do
-            req.AddParameter(pr.Name, pr.Value, pr.ParameterType) |> ignore
+    let createRequest  (verb:Method) (httpParams: HttpParams) (httpHeaders: HttpHeaders) = 
+        let req = RestRequest(verb) 
+        do httpParams 
+            |> Seq.filter (fun pr -> String.IsNullOrWhiteSpace(pr.Name) |> not) 
+            |> Seq.iter (fun pr -> req.AddParameter(pr.Name, pr.Value, pr.ParameterType) |> ignore)
+       
+        do httpHeaders 
+            |> Seq.filter (fun pr -> String.IsNullOrWhiteSpace(pr.Key) |> not) 
+            |> Seq.iter (fun pr -> req.AddParameter(pr.Key, pr.Value) |> ignore)
+
         req
         
 
     let createGetRequest = createRequest Method.GET
   //  let createPutRequest = createRequest Method.PUT
 
-    let runAsync url (resource:string) (httpParams : HttpParam seq)= 
+    let runAsync url (resource:string) (httpParams : HttpParams) (httpHeaders: HttpHeaders)= 
         let client = Client.create url
-        let req = GET_Req(Guid.NewGuid(), createGetRequest httpParams)
+        let req = GET_Req(Guid.NewGuid(), createGetRequest httpParams httpHeaders)
         let cancel = new CancellationTokenSource()
         let execute() = async {    
             match client.Run cancel req with
             | GET_Resp(id, respTask) ->
-                let! rawResponse = Async.AwaitTask(respTask)              
-                return rawResponse
+                let sw = Stopwatch.StartNew()
+                let! rawResponse = Async.AwaitTask(respTask)      
+                sw.Stop()        
+                return  rawResponse, sw.Elapsed
             | POST_Resp(id, respTask) -> 
+                let sw = Stopwatch.StartNew()
                 let! rawResponse = Async.AwaitTask(respTask)
-                return rawResponse
+                sw.Stop()     
+                return rawResponse, sw.Elapsed
             }
         execute()
 

@@ -99,20 +99,21 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <!--<Button Command="{Binding SendCommand}" Grid.Column="0" BorderThickness="0" Background="Transparent">
+                            <Button Padding="5,2,5,2" Style="{DynamicResource SquareButtonStyle}" Command="{Binding SendCommand}" Grid.Column="0" BorderThickness="0" >
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel.Resources>
                                         <SolidColorBrush Color="Green" x:Key="FillColor" />
                                     </StackPanel.Resources>
-                                    <ContentControl Content="{StaticResource icon_play}" Width="16" Height="16" Padding="0" />
+                                    
+                                    <ContentControl Content="{DynamicResource icon_play}" Width="24" Height="24" Padding="0" />
                                 </StackPanel>
-                            </Button>-->
-                            <Border BorderThickness="0" Grid.Column="0" Background="{TemplateBinding Background}">
+                            </Button>
+                            <!--<Border BorderThickness="0" Grid.Column="0" Background="{TemplateBinding Background}">
                                 <Border.Resources>
                                     <SolidColorBrush Color="SkyBlue" x:Key="FillColor" />
                                 </Border.Resources>
                                 <ContentControl Content="{DynamicResource icon_globe}" Width="24" Height="24" />                               
-                            </Border>
+                            </Border>-->
 
                             <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
@@ -685,75 +686,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <ControlTemplate x:Key="TabItemControlTemplate1" TargetType="{x:Type TabItem}">
-        <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" HorizontalAlignment="Stretch" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-            <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <DockPanel.Resources>
-                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-                </DockPanel.Resources>
-                <ContentPresenter x:Name="ContentSite" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" DockPanel.Dock="Top" TextElement.Foreground="{TemplateBinding Foreground}" TextElement.FontWeight="{TemplateBinding controls:ControlsHelper.HeaderFontWeight}" TextElement.FontStretch="{TemplateBinding controls:ControlsHelper.HeaderFontStretch}" TextElement.FontSize="{TemplateBinding controls:ControlsHelper.HeaderFontSize}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                <Rectangle x:Name="Underline" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" Height="2" Margin="0,1,0,0">
-                    <Rectangle.Visibility>
-                        <Binding Path="(controls:TabControlHelper.IsUnderlined)" RelativeSource="{RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type TabControl}}">
-                            <Binding.Converter>
-                                <BooleanToVisibilityConverter/>
-                            </Binding.Converter>
-                        </Binding>
-                    </Rectangle.Visibility>
-                </Rectangle>
-            </DockPanel>
-        </Border>
-        <ControlTemplate.Triggers>
-            <Trigger Property="TabStripPlacement" Value="Left">
-                <Setter Property="DockPanel.Dock" TargetName="ContentSite" Value="Left"/>
-                <Setter Property="DockPanel.Dock" TargetName="Underline" Value="Right"/>
-                <Setter Property="Width" TargetName="Underline" Value="2"/>
-                <Setter Property="Height" TargetName="Underline" Value="Auto"/>
-                <Setter Property="Margin" TargetName="Underline" Value="1,0,0,0"/>
-            </Trigger>
-            <Trigger Property="TabStripPlacement" Value="Top">
-                <Setter Property="DockPanel.Dock" TargetName="ContentSite" Value="Top"/>
-                <Setter Property="DockPanel.Dock" TargetName="Underline" Value="Bottom"/>
-                <Setter Property="DockPanel.Dock" TargetName="Underline" Value="Right"/>
-                <Setter Property="Height" TargetName="Underline" Value="2"/>
-                <Setter Property="Width" TargetName="Underline" Value="Auto"/>
-                <Setter Property="Margin" TargetName="Underline" Value="0,1,0,0"/>
-            </Trigger>
-            <Trigger Property="TabStripPlacement" Value="Right">
-                <Setter Property="DockPanel.Dock" TargetName="ContentSite" Value="Right"/>
-                <Setter Property="DockPanel.Dock" TargetName="Underline" Value="Left"/>
-                <Setter Property="Width" TargetName="Underline" Value="2"/>
-                <Setter Property="Height" TargetName="Underline" Value="Auto"/>
-                <Setter Property="Margin" TargetName="Underline" Value="0,0,1,0"/>
-            </Trigger>
-            <Trigger Property="TabStripPlacement" Value="Bottom">
-                <Setter Property="DockPanel.Dock" TargetName="ContentSite" Value="Bottom"/>
-                <Setter Property="DockPanel.Dock" TargetName="Underline" Value="Top"/>
-                <Setter Property="Height" TargetName="Underline" Value="2"/>
-                <Setter Property="Width" TargetName="Underline" Value="Auto"/>
-                <Setter Property="Margin" TargetName="Underline" Value="0,0,0,1"/>
-            </Trigger>
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="{DynamicResource AccentColorBrush}"/>
-                <Setter Property="Fill" TargetName="Underline" Value="{DynamicResource AccentColorBrush}"/>
-            </Trigger>
-            <Trigger Property="IsSelected" Value="False">
-                <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="{DynamicResource GrayNormalBrush}"/>
-                <Setter Property="Fill" TargetName="Underline" Value="{DynamicResource GrayNormalBrush}"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" SourceName="ContentSite" Value="True">
-                <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="{DynamicResource GrayHoverBrush}"/>
-                <Setter Property="Fill" TargetName="Underline" Value="{DynamicResource GrayHoverBrush}"/>
-            </Trigger>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="IsMouseOver" SourceName="ContentSite" Value="True"/>
-                    <Condition Property="IsSelected" Value="True"/>
-                </MultiTrigger.Conditions>
-                <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="{DynamicResource HighlightBrush}"/>
-                <Setter Property="Fill" TargetName="Underline" Value="{DynamicResource HighlightBrush}"/>
-            </MultiTrigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-
+  
 </ResourceDictionary>

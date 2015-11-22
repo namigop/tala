@@ -9,6 +9,7 @@ open System.Xml
 open ICSharpCode.AvalonEdit.Document
 open ICSharpCode.AvalonEdit.Folding
 open Newtonsoft.Json
+open System.Xml.Linq
 
 type HttpPayload() =
     inherit NotifyBase()
@@ -24,14 +25,17 @@ type HttpPayload() =
             use stringReader = new StringReader(json)
             use stringWriter = new StringWriter()
             use jsonReader = new JsonTextReader(stringReader)
-            use jsonWriter = new JsonTextWriter(stringWriter, Formatting = Formatting.Indented)
+            use jsonWriter = new JsonTextWriter(stringWriter, Formatting = Newtonsoft.Json.Formatting.Indented)
             jsonWriter.WriteToken(jsonReader)
             stringWriter.ToString()
         with
         | _ -> json
         
     let prettyPrintXml(xml) =
-        xml
+        try
+            XDocument.Parse(xml).ToString()
+        with
+        | _ -> xml
 
     member this.Mode 
         with get() = mode

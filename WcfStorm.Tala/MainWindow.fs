@@ -26,11 +26,16 @@ type MainWindowViewModel() =
     let mutable targetUrl = urls.Item(0)
     
     let respHeaders = HttpHeaders()
-    let reqParams = HttpParams()
+    let reqParams = 
+        let temp = HttpParams()
+        temp.Add(HttpParam())
+        temp
+
     let headers = 
         let temp = HttpHeaders()
         temp.Add(WcfStorm.Tala.HttpHeader(Key="User-Agent", Value="WcfStorm.Rest/2.2.0 (.NET4.0);support@wcfstorm.com"))
         temp.Add(WcfStorm.Tala.HttpHeader(Key="Content-Type", Value="application/json"))
+        temp.Add(WcfStorm.Tala.HttpHeader(Key="", Value=""))
         temp
     let parameterTypeSelection =
         let temp = new ObservableCollection<ParameterType>()
@@ -50,12 +55,6 @@ type MainWindowViewModel() =
     member this.Response = responsePayload
     member this.Urls     = urls
     member this.ParameterTypeSelection = parameterTypeSelection
-//    member this.NewTargetUrl 
-//        with get() = this.TargetUrl
-//        and set v =
-//            if (String.IsNullOrWhiteSpace(this.TargetUrl) && not(String.IsNullOrWhiteSpace(v))) then
-//                urls.Add v
-//                this.TargetUrl <- if v.StartsWith("http://") then v else "http://" + v
                 
     member this.HttpCallFailed 
         with get() = httpCallFailed
@@ -95,8 +94,8 @@ type MainWindowViewModel() =
         Command.create (fun arg -> not this.IsCallInProgress) onRun
   
     member this.SendCommand =
-        let processResp (rawResponse:IRestResponse) =
-            let processed = Core.processRestResp rawResponse
+        let processResp (rawResponse:IRestResponse) elapsed =
+            let processed = Core.processRestResp rawResponse elapsed
             this.ResponseStatusCode <- processed.ResponseCode
             this.HttpCallFailed <- processed.HttpCallFailed
             this.Response.SetText(processed.RawResponseText, processed.HttpContentType)
@@ -106,7 +105,7 @@ type MainWindowViewModel() =
             for h in processed.Headers do
                 respHeaders.Add h
         let canRun arg = not this.IsCallInProgress
-        let onOk resp = processResp resp
+        let onOk (resp, elapsed) = processResp resp elapsed
         let onError exc =
             this.IsCallInProgress <- false
             this.Response.Doc.Text <- exc.ToString()
@@ -115,9 +114,10 @@ type MainWindowViewModel() =
         let getTargetUrl() =
             match Core.getUri this.TargetUrl with
             | Some(uri) ->
-                if not (urls.Contains(uri.AbsoluteUri))  then
-                    urls.Add (uri.AbsoluteUri.TrimEnd('/'))
-                uri.AbsoluteUri
+                let trimmed = uri.AbsoluteUri.TrimEnd('/')
+                if not (urls.Contains(trimmed))  then
+                    urls.Add (trimmed)
+                trimmed
             | None -> ""
 
         Command.create 
@@ -126,7 +126,7 @@ type MainWindowViewModel() =
                 this.IsCallInProgress <- true
                 this.HttpCallFailed <- false
                 Async.StartWithContinuations( 
-                    Core.runAsync (getTargetUrl()) "/"  this.RequestParameters,
+                    Core.runAsync (getTargetUrl()) "/"  this.RequestParameters this.RequestHeaders,
                     onOk,
                     onError,
                     onCancel))
