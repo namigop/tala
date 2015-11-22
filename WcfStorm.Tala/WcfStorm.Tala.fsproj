@@ -63,10 +63,10 @@
     <Compile Include="JsonBraceFolder.fs" />
     <Compile Include="NotifyBase.fs" />
     <Compile Include="TargetUrl.fs" />
-    <Compile Include="Client.fs" />
     <Compile Include="HttpParam.fs" />
     <Compile Include="HttpPayload.fs" />
     <Compile Include="HttpHeaders.fs" />
+    <Compile Include="Client.fs" />
     <Compile Include="Core.fs" />
     <Compile Include="Commands.fs" />
     <Compile Include="MainWindow.fs" />
@@ -124,6 +124,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />

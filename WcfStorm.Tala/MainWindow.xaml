@@ -57,11 +57,7 @@
                     <TextBlock Text="open" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <ComboBox Width="77">
-                <ComboBoxItem Content="GET" IsSelected="True" />
-                <ComboBoxItem Content="POST" />
-                <ComboBoxItem Content="PUT" />
-                <ComboBoxItem Content="DELETE" />
+            <ComboBox Width="77" IsEditable="False" IsReadOnly="True" ItemsSource="{Binding Verbs}" SelectedItem="{Binding SelectedVerb}" BorderThickness="0">                 
             </ComboBox>
         </controls:WindowCommands>
     </controls:MetroWindow.LeftWindowCommands>
@@ -347,14 +343,14 @@
                                             Width="100" />
                                         <Border />
                                     </DockPanel>
-                                    <Border  Background="#FFF35454" DockPanel.Dock="Top" Height="2" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                                    <Border  Background="#FFF35454" DockPanel.Dock="Top" Height="1" VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                             Visibility="{Binding HttpCallFailed, Converter={StaticResource BooleanToVisibilityConverter}}"
                                             >
                                         <Border.Effect>
                                             <DropShadowEffect ShadowDepth="0"
                                                   Color="Red"
                                                   Opacity="1"
-                                                  BlurRadius="10" />
+                                                  BlurRadius="5" />
                                         </Border.Effect>
                                     </Border>
                                 </Grid>

@@ -56,22 +56,30 @@ module Core =
 
         req
         
+ 
+    let runAsync url (resource:string) (httpParams : HttpParams) (httpHeaders: HttpHeaders) (verb:Method)= 
+        let client = Client.create url (httpHeaders |> Seq.tryFind(fun t -> t.Key.ToLowerInvariant().Trim() = "user-agent"))
 
-    let createGetRequest = createRequest Method.GET
-  //  let createPutRequest = createRequest Method.PUT
+        let req = 
+            match verb with
+            | Method.GET -> GET_Req(Guid.NewGuid(), createRequest Method.GET httpParams httpHeaders)
+            | Method.DELETE -> DELETE_Req(Guid.NewGuid(), createRequest Method.DELETE httpParams httpHeaders)
+            | Method.OPTIONS -> OPTIONS_Req(Guid.NewGuid(), createRequest Method.OPTIONS httpParams httpHeaders)
+            | Method.HEAD -> HEAD_Req(Guid.NewGuid(), createRequest Method.HEAD httpParams httpHeaders)
+            | Method.POST -> POST_Req(Guid.NewGuid(), createRequest Method.POST httpParams httpHeaders)
+            | Method.PUT -> PUT_Req(Guid.NewGuid(), createRequest Method.PUT httpParams httpHeaders)
+            | _ -> failwith "Not yet supported"
 
-    let runAsync url (resource:string) (httpParams : HttpParams) (httpHeaders: HttpHeaders)= 
-        let client = Client.create url
-        let req = GET_Req(Guid.NewGuid(), createGetRequest httpParams httpHeaders)
+
         let cancel = new CancellationTokenSource()
         let execute() = async {    
             match client.Run cancel req with
-            | GET_Resp(id, respTask) ->
+            | GET_Resp(id, respTask) | DELETE_Resp(id, respTask) | OPTIONS_Resp(id, respTask) | HEAD_Resp(id, respTask) ->
                 let sw = Stopwatch.StartNew()
                 let! rawResponse = Async.AwaitTask(respTask)      
                 sw.Stop()        
                 return  rawResponse, sw.Elapsed
-            | POST_Resp(id, respTask) -> 
+            | POST_Resp(id, respTask) | PUT_Resp(id, respTask) -> 
                 let sw = Stopwatch.StartNew()
                 let! rawResponse = Async.AwaitTask(respTask)
                 sw.Stop()     

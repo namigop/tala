@@ -16,6 +16,16 @@ type MainWindowViewModel() =
     let responsePayload = HttpPayload()
     let mutable isCallInProgress = false
     let mutable httpCallFailed= false
+    let verbs =
+        let temp = ObservableCollection<Method>()
+        temp.Add(Method.GET)
+        temp.Add(Method.POST)
+        temp.Add(Method.PUT)
+        temp.Add(Method.DELETE)
+        temp.Add(Method.HEAD)
+        temp.Add(Method.OPTIONS)
+        temp
+    let mutable selectedVerb = Method.GET
 
     let urls = 
         let temp = ObservableCollection<string>()
@@ -54,11 +64,16 @@ type MainWindowViewModel() =
     member this.Request  = requestPayload
     member this.Response = responsePayload
     member this.Urls     = urls
+    member this.Verbs  = verbs
     member this.ParameterTypeSelection = parameterTypeSelection
                 
     member this.HttpCallFailed 
         with get() = httpCallFailed
         and set v = this.RaiseAndSetIfChanged(&httpCallFailed, v, "HttpCallFailed")
+                 
+    member this.SelectedVerb 
+        with get() = selectedVerb
+        and set v = this.RaiseAndSetIfChanged(&selectedVerb, v, "SelectedVerb")
   
     member this.IsCallInProgress 
         with get() = isCallInProgress
@@ -126,7 +141,7 @@ type MainWindowViewModel() =
                 this.IsCallInProgress <- true
                 this.HttpCallFailed <- false
                 Async.StartWithContinuations( 
-                    Core.runAsync (getTargetUrl()) "/"  this.RequestParameters this.RequestHeaders,
+                    Core.runAsync (getTargetUrl()) "/"  this.RequestParameters this.RequestHeaders this.SelectedVerb,
                     onOk,
                     onError,
                     onCancel))
