@@ -33,13 +33,13 @@
                 </StackPanel>
             </Button>-->
             <!--<Button Content="cookies" />-->
-            <Button>
+            <Button Command="{Binding SettingsCommand}">
                 <StackPanel Orientation="Horizontal">
                     <ContentControl Content="{StaticResource icon_gear}" Width="24" Height="24" />
                     <TextBlock Text="settings" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <Button>
+            <Button Command="{Binding SaveCommand}">
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.Resources>
                         <SolidColorBrush Color="DarkBlue" x:Key="FillColor" />
@@ -48,7 +48,7 @@
                     <TextBlock Text="save" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <Button>
+            <Button Command="{Binding OpenCommand}">
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.Resources>
                         <SolidColorBrush Color="DarkGoldenrod" x:Key="FillColor" />
@@ -170,7 +170,8 @@
                                                              Margin="0"
                                                              Padding="0"
                                                               BorderThickness="0"
-
+                                                             FontWeight="SemiBold"
+    
                                                              controls:TextBoxHelper.Watermark="Header name" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>

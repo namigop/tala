@@ -108,6 +108,25 @@ type MainWindowViewModel() =
 
         Command.create (fun arg -> not this.IsCallInProgress) onRun
   
+    member this.SaveCommand =
+        let canRun arg = not this.IsCallInProgress
+        Command.create 
+            canRun
+            (fun arg -> failwith "//TODO")
+ 
+    member this.OpenCommand =
+        let canRun arg = not this.IsCallInProgress
+        Command.create 
+            canRun
+            (fun arg -> failwith "//TODO")
+            
+    member this.SettingsCommand =
+        let canRun arg = not this.IsCallInProgress
+        Command.create 
+            canRun
+            (fun arg -> failwith "//TODO")
+
+
     member this.SendCommand =
         let processResp (rawResponse:IRestResponse) elapsed =
             let processed = Core.processRestResp rawResponse elapsed
@@ -141,7 +160,7 @@ type MainWindowViewModel() =
                 this.IsCallInProgress <- true
                 this.HttpCallFailed <- false
                 Async.StartWithContinuations( 
-                    Core.runAsync (getTargetUrl()) "/"  this.RequestParameters this.RequestHeaders this.SelectedVerb,
+                    Core.runAsync (getTargetUrl()) "/"  this.RequestParameters this.RequestHeaders this.SelectedVerb this.Request.Doc.Text,
                     onOk,
                     onError,
                     onCancel))

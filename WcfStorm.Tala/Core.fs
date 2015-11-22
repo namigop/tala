@@ -43,21 +43,49 @@ module Core =
           HttpContentType = getContentType(rawResponse.ContentType)
           RawResponseText = rawRespText
           Headers = respHeaders }
+     
+    let setupBody reqBody (req:IRestRequest)  =            
+        if  req.RequestFormat = DataFormat.Xml then
+                req.AddParameter(new Parameter( Name="application/xml", Value=reqBody, Type = ParameterType.RequestBody)) |>ignore  
+        elif  req.RequestFormat = DataFormat.Json then
+            req.AddParameter(new Parameter( Name="application/json", Value=reqBody, Type = ParameterType.RequestBody)) |>ignore
+        else 
+            req.AddParameter(new Parameter( Name="text/plain", Value=reqBody, Type = ParameterType.RequestBody)) |>ignore
+        
     
+    let getDataFormat (httpHeaders: HttpHeaders) =
+        match (httpHeaders |> Seq.tryFind(fun d -> d.Key.ToLowerInvariant().Trim() = "content-type" ) ) with
+        | Some(header) -> 
+            let headerKey = header.Key.ToLowerInvariant().Trim()
+            if (headerKey.EndsWith("xml")) then
+                Some(DataFormat.Xml)
+            else if (headerKey.EndsWith("json")) then
+                Some(DataFormat.Json)
+            else
+                None
+        | None -> None
+
+
     let createRequest  (verb:Method) (httpParams: HttpParams) (httpHeaders: HttpHeaders) = 
         let req = RestRequest(verb) 
+        let tryAssignDataFormat (restReq:RestRequest) allHeaders =
+            match getDataFormat allHeaders with
+            | Some(format) -> restReq.RequestFormat <- format
+            | None -> ()
+       
+        //tryAssignDataFormat req httpHeaders
         do httpParams 
             |> Seq.filter (fun pr -> String.IsNullOrWhiteSpace(pr.Name) |> not) 
             |> Seq.iter (fun pr -> req.AddParameter(pr.Name, pr.Value, pr.ParameterType) |> ignore)
        
         do httpHeaders 
             |> Seq.filter (fun pr -> String.IsNullOrWhiteSpace(pr.Key) |> not) 
-            |> Seq.iter (fun pr -> req.AddParameter(pr.Key, pr.Value) |> ignore)
+            |> Seq.iter (fun pr -> req.AddHeader(pr.Key, pr.Value) |> ignore)
 
         req
         
  
-    let runAsync url (resource:string) (httpParams : HttpParams) (httpHeaders: HttpHeaders) (verb:Method)= 
+    let runAsync url (resource:string) (httpParams : HttpParams) (httpHeaders: HttpHeaders) (verb:Method) (reqBody:string)= 
         let client = Client.create url (httpHeaders |> Seq.tryFind(fun t -> t.Key.ToLowerInvariant().Trim() = "user-agent"))
 
         let req = 
@@ -66,8 +94,16 @@ module Core =
             | Method.DELETE -> DELETE_Req(Guid.NewGuid(), createRequest Method.DELETE httpParams httpHeaders)
             | Method.OPTIONS -> OPTIONS_Req(Guid.NewGuid(), createRequest Method.OPTIONS httpParams httpHeaders)
             | Method.HEAD -> HEAD_Req(Guid.NewGuid(), createRequest Method.HEAD httpParams httpHeaders)
-            | Method.POST -> POST_Req(Guid.NewGuid(), createRequest Method.POST httpParams httpHeaders)
-            | Method.PUT -> PUT_Req(Guid.NewGuid(), createRequest Method.PUT httpParams httpHeaders)
+            | Method.POST -> 
+                let postReq = createRequest Method.POST httpParams httpHeaders
+                if not (String.IsNullOrWhiteSpace(reqBody)) then
+                    setupBody reqBody postReq
+                POST_Req(Guid.NewGuid(), postReq)
+            | Method.PUT -> 
+                let putReq = createRequest Method.PUT httpParams httpHeaders
+                if not (String.IsNullOrWhiteSpace(reqBody)) then
+                    setupBody reqBody putReq
+                PUT_Req(Guid.NewGuid(), putReq)
             | _ -> failwith "Not yet supported"
 
 
