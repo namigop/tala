@@ -11,25 +11,35 @@ open System.Diagnostics
 
 type ProcessedResponse =
     { ResponseCode : string
+      ResponseStatus : RestSharp.ResponseStatus
+      Elapsed : TimeSpan
       HttpCallFailed : bool
       HttpContentType : HttpContentType
       RawResponseText : string
       Headers : WcfStorm.Tala.HttpHeader seq }
 
 module Core =
-    
+    let isFailed (rawResponse : IRestResponse) =
+        rawResponse.ResponseStatus = ResponseStatus.Aborted || 
+        rawResponse.ResponseStatus = ResponseStatus.Error || 
+        rawResponse.ResponseStatus = ResponseStatus.TimedOut ||
+        rawResponse.ErrorException <> null ||
+        (Convert.ToInt32(rawResponse.StatusCode)) >= 300
+
     let getContentType rawContentType = HttpContentType.Other("").Parse(rawContentType)
     let processRestResp (rawResponse : IRestResponse) (elapsed:TimeSpan) =
-        let elapsedText = " (Elapsed: " + elapsed.TotalMilliseconds.ToString() + " ms)"
-        let respCode = "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription + elapsedText
-
+      
+        let respCode = "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription
+         
         let rawRespText =
             if (rawResponse.ErrorException = null) then rawResponse.Content
             else rawResponse.ErrorException.ToString()
 
         let respHeaders = rawResponse.Headers |> Seq.map (fun i -> WcfStorm.Tala.HttpHeader(Key = i.Name, Value = i.Value.ToString()))
         { ResponseCode = respCode
-          HttpCallFailed = rawResponse.ErrorException <> null
+          ResponseStatus = rawResponse.ResponseStatus
+          Elapsed = elapsed
+          HttpCallFailed = isFailed rawResponse
           HttpContentType = getContentType(rawResponse.ContentType)
           RawResponseText = rawRespText
           Headers = respHeaders }

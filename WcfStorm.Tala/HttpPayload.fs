@@ -15,7 +15,7 @@ type HttpPayload() =
     inherit NotifyBase()
     let mutable highlighting = Resource.jsonHighlightingMode
     let mutable mode = HttpContentType.Json("text/json")
-    let mutable doc = TextDocument(Text="Foo")
+    let mutable doc = TextDocument(Text="")
     let mutable foldFunction = 
         let folding, _ = EditorOptions.get mode
         folding
