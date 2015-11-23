@@ -91,6 +91,9 @@ module Client =
                             restReq 
                             (fun (id2, resp2) -> PUT_Resp(id2, resp2))
                     | POST_Req(id, restReq) ->
-                      restReq.Method <- Method.POST
-                      let resp = runAsync cancellationTokenSource restReq
-                      POST_Resp(id, resp) }
+                        run 
+                            Method.POST 
+                            id 
+                            cancellationTokenSource 
+                            restReq 
+                            (fun (id2, resp2) -> POST_Resp(id2, resp2))
