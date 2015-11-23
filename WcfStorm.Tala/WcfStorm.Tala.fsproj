@@ -57,11 +57,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="packages.config" />
+    <Compile Include="NotifyBase.fs" />
     <Compile Include="Resource.fs" />
     <Compile Include="HttpContentType.fs" />
     <Compile Include="RelayCommand.fs" />
     <Compile Include="JsonBraceFolder.fs" />
-    <Compile Include="NotifyBase.fs" />
     <Compile Include="TargetUrl.fs" />
     <Compile Include="HttpParam.fs" />
     <Compile Include="HttpPayload.fs" />
@@ -69,6 +69,8 @@
     <Compile Include="Client.fs" />
     <Compile Include="Core.fs" />
     <Compile Include="Commands.fs" />
+    <Compile Include="SettingsWindow.fs" />
+    <Resource Include="SettingsWindow.xaml" />
     <Compile Include="MainWindow.fs" />
     <Resource Include="MainWindow.xaml" />
     <Resource Include="App.xaml" />

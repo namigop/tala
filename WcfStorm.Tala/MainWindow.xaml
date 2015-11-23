@@ -12,6 +12,7 @@
     Height="800" MinWidth="1200" Width="1200"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     Style="{DynamicResource CleanWindowStyleKey}"
+    ShowIconOnTitleBar="True"
     ResizeMode="CanResizeWithGrip"
     GlowBrush="{DynamicResource AccentColorBrush}"
     x:Name="mainWindow">

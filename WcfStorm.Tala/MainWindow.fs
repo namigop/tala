@@ -9,7 +9,8 @@ open System
 open System.Net
 
 type MainWindow = XAML<"MainWindow.xaml">
- 
+type SettingsWindow = XAML<"SettingsWindow.xaml">
+
 type MainWindowViewModel() =
     inherit NotifyBase()
     let requestPayload = HttpPayload()
@@ -124,7 +125,11 @@ type MainWindowViewModel() =
         let canRun arg = not this.IsCallInProgress
         Command.create 
             canRun
-            (fun arg -> failwith "//TODO")
+            (fun arg -> 
+                let win = SettingsWindow()
+                let vm = win.Root.DataContext :?> SettingsWindowViewModel
+                vm.Close <- win.Root.Close
+                win.Root.ShowDialog() |> ignore)
 
 
     member this.SendCommand =

@@ -28,14 +28,19 @@ type IClient =
     abstract Run : CancellationTokenSource -> Request -> Response
 
 module Client =
+    open RestSharp.Authenticators
+
     let private setupConfig (userAgentHeader : WcfStorm.Tala.HttpHeader option) (client : RestClient) =
-        client.FollowRedirects <- Config.followRedirect
-        client.Timeout <- Config.timeoutInMsec
-        client.MaxRedirects <- Nullable(Config.maxRedirects)
+        client.FollowRedirects <- Config.genSettings.FollowRedirects
+        client.Timeout <-  Config.genSettings.Timeout
+        client.MaxRedirects <- Nullable(Config.genSettings.MaxRedirects)
         if (userAgentHeader.IsSome) then client.UserAgent <- userAgentHeader.Value.Value
         client
 
-    let private setupAuth (client : RestClient) =
+        TODO
+    let private setupAuth  (client : RestClient) =
+       client.Authenticator <-  HttpBasicAuthenticator(cfg.BasicAuthentication.Username, (StringEncryptionOps.encryptor.Decrypt cfg.BasicAuthentication.Password))
+     
         //TODO
         client
 
@@ -97,3 +102,4 @@ module Client =
                             cancellationTokenSource 
                             restReq 
                             (fun (id2, resp2) -> POST_Resp(id2, resp2))
+        }
