@@ -10,11 +10,30 @@ open ICSharpCode.AvalonEdit.Document
 open ICSharpCode.AvalonEdit.Highlighting.Xshd
 open System.Configuration
 
+type AuthMode =
+| Anonymous =0
+| Basic = 1
+| Windows = 2
+
+type WindowsCredentialsType =
+| Default = 0
+| Network = 1
+
 type BasicAuthentation() =
     inherit NotifyBase()
     let mutable username = ""
     let mutable password = ""
     let mutable domain = ""
+    let mutable authMode = AuthMode.Anonymous
+    let mutable winCredType = WindowsCredentialsType.Default
+
+    member this.AuthMode 
+        with get() = authMode
+        and set v = this.RaiseAndSetIfChanged(&authMode, v, "AuthMode")
+   
+    member this.WinCredType 
+        with get() = winCredType
+        and set v = this.RaiseAndSetIfChanged(&winCredType, v, "WinCredType")
 
     member this.Username
         with get() = username

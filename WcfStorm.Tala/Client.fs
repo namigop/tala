@@ -29,6 +29,7 @@ type IClient =
 
 module Client =
     open RestSharp.Authenticators
+    open System.Net
 
     let private setupConfig (userAgentHeader : WcfStorm.Tala.HttpHeader option) (client : RestClient) =
         client.FollowRedirects <- Config.genSettings.FollowRedirects
@@ -37,11 +38,20 @@ module Client =
         if (userAgentHeader.IsSome) then client.UserAgent <- userAgentHeader.Value.Value
         client
 
-        TODO
-    let private setupAuth  (client : RestClient) =
-       client.Authenticator <-  HttpBasicAuthenticator(cfg.BasicAuthentication.Username, (StringEncryptionOps.encryptor.Decrypt cfg.BasicAuthentication.Password))
-     
-        //TODO
+      
+    let private setupAuth (auth:BasicAuthentation) (restReq:IRestRequest) (client : RestClient) =
+        match auth.AuthMode  with
+        | AuthMode.Anonymous -> ()
+        | AuthMode.Basic ->
+            client.Authenticator <- HttpBasicAuthenticator(auth.Username, auth.Password)
+        | AuthMode.Windows ->
+            match auth.WinCredType with
+            | WindowsCredentialsType.Default ->
+                client.Authenticator <- NtlmAuthenticator() // use default credentials!
+            | WindowsCredentialsType.Network ->
+                let cred = new NetworkCredential(auth.Username, auth.Password, auth.Domain)
+                restReq.Credentials <- cred   
+
         client
 
     let create (url : string) (userAgentHeader : WcfStorm.Tala.HttpHeader option) =
@@ -49,7 +59,7 @@ module Client =
             let client =
                 new RestClient(url)
                 |> setupConfig userAgentHeader
-                |> setupAuth
+                |> setupAuth Config.basicAuth restReq
             client.ExecuteTaskAsync(restReq, cancellationTokenSource.Token)
 
         let run verb id cancellationTokenSource (restReq : IRestRequest) (createResp : Guid * Task<IRestResponse> -> 'a) =
