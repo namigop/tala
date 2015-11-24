@@ -129,6 +129,7 @@ type MainWindowViewModel() =
                 let win = SettingsWindow()
                 let vm = win.Root.DataContext :?> SettingsWindowViewModel
                 vm.Close <- win.Root.Close
+                win.Root.Owner <- System.Windows.Application.Current.MainWindow
                 win.Root.ShowDialog() |> ignore)
 
 

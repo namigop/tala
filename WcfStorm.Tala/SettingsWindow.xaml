@@ -27,13 +27,13 @@
     <Grid Background="#293955">
 
 
-        <Grid Background="WhiteSmoke" Margin="2">
+        <Grid Background="White" Margin="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Expander Background="WhiteSmoke" Header="Authentication" Grid.Row="0" IsExpanded="True" 
+            <Expander Background="White" Header="Authentication" Grid.Row="0" IsExpanded="True" 
                       controls:ControlsHelper.HeaderFontWeight="SemiBold"
                       Template="{StaticResource ExpanderControlTemplate1}">
                 <Grid>
@@ -100,7 +100,7 @@
                 </Grid>
                
             </Expander>
-            <Expander Background="WhiteSmoke" Header="General Settings" Grid.Row="1" IsExpanded="True" 
+            <Expander Background="White" Header="General Settings" Grid.Row="1" IsExpanded="True" 
                       controls:ControlsHelper.HeaderFontWeight="SemiBold"
                       Template="{StaticResource ExpanderControlTemplate1}">
                 <Grid>
