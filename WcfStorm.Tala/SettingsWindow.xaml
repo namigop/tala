@@ -33,7 +33,9 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Expander Header="Authentication" Grid.Row="0" IsExpanded="True">
+            <Expander Background="WhiteSmoke" Header="Authentication" Grid.Row="0" IsExpanded="True" 
+                      controls:ControlsHelper.HeaderFontWeight="SemiBold"
+                      Template="{StaticResource ExpanderControlTemplate1}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -42,7 +44,7 @@
                         <RowDefinition Height="*" />
 
                     </Grid.RowDefinitions>
-                    <GroupBox Header="Authentication mode" Grid.Row="0">
+                    <GroupBox Header="Authentication mode" Grid.Row="0" Background="#CFD6E5">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <RadioButton Content="Anonymous" IsChecked="{Binding IsAnonymousAuthChecked}" Margin="5"/>
@@ -98,7 +100,9 @@
                 </Grid>
                
             </Expander>
-            <Expander Header="General Settings" Grid.Row="1" IsExpanded="True">
+            <Expander Background="WhiteSmoke" Header="General Settings" Grid.Row="1" IsExpanded="True" 
+                      controls:ControlsHelper.HeaderFontWeight="SemiBold"
+                      Template="{StaticResource ExpanderControlTemplate1}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" x:Name="foo"  />
