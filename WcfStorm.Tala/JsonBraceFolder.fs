@@ -1,10 +1,18 @@
 ﻿namespace WcfStorm.Tala
 
+open ICSharpCode.AvalonEdit.Highlighting
+open ICSharpCode.AvalonEdit
+open System.Text
+open System.IO
+open System.Resources
+open System.Xml
 open ICSharpCode.AvalonEdit.Document
 open ICSharpCode.AvalonEdit.Folding
-open ICSharpCode.AvalonEdit.Highlighting
-open System
+open Newtonsoft.Json
+open System.Xml.Linq
 open System.Collections.Generic
+open System.Text
+open System.Collections
 
 ///
 /// This is a direct port to F# of the code https://github.com/icsharpcode/SharpDevelop/blob/master/samples/AvalonEdit.Sample/BraceFoldingStrategy.cs
@@ -49,3 +57,20 @@ module EditorOptions =
         match mode with
         | Json(raw) -> braceFolding.UpdateFoldings, Resource.jsonHighlightingMode
         | _ -> xmlFolding.UpdateFoldings, HighlightingManager.Instance.GetDefinition("XML")
+
+    let prettyPrintJson(json) =
+        try
+            use stringReader = new StringReader(json)
+            use stringWriter = new StringWriter()
+            use jsonReader = new JsonTextReader(stringReader)
+            use jsonWriter = new JsonTextWriter(stringWriter, Formatting = Newtonsoft.Json.Formatting.Indented)
+            jsonWriter.WriteToken(jsonReader)
+            stringWriter.ToString()
+        with
+        | _ -> json
+        
+    let prettyPrintXml(xml) =
+        try
+            XDocument.Parse(xml).ToString()
+        with
+        | _ -> xml

@@ -137,14 +137,26 @@ module Core =
 
     let saveTestData(testReq:TestRequest) =
         let dlg = new Microsoft.Win32.SaveFileDialog();
-        dlg.FileName <- "Data"; // Default file name
-        dlg.DefaultExt <- ".tala"; // Default file extension
-        dlg.Filter <- "Tala (.tala)|*.tala"; // Filter files by extension
+        dlg.FileName <- "Data"
+        dlg.DefaultExt <- ".tala"
+        dlg.Filter <- "Tala (.tala)|*.tala"
 
         // Show save file dialog box
         let result = dlg.ShowDialog()
         if (result.HasValue && result.Value) then    
             let filename = dlg.FileName
-            File.WriteAllText(filename, JsonConvert.SerializeObject(testReq))
+            File.WriteAllText(filename, JsonConvert.SerializeObject(testReq) |> EditorOptions.prettyPrintJson)
         
-       
+    let openTestData() =
+        let dlg = new Microsoft.Win32.OpenFileDialog();
+        dlg.DefaultExt <- ".tala" 
+        dlg.Filter <- "Tala (.tala)|*.tala" 
+        let result = dlg.ShowDialog()
+        if (result.HasValue && result.Value) then    
+            let filename = dlg.FileName
+            let text = File.ReadAllText(filename)
+            let testReq = JsonConvert.DeserializeObject<TestRequest>(text)
+            Some(testReq)
+        else
+            None
+         

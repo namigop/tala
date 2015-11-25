@@ -116,8 +116,14 @@ type MainWindowViewModel() =
             canRun
             (fun arg -> 
                 let testReq = TestRequest(Url = this.TargetUrl, Verb = this.SelectedVerb, RequestText = "")
-                testReq.RequestHeaders <- this.RequestHeaders |> Seq.toArray
-                testReq.RequestParameters <- this.RequestParameters |> Seq.toArray
+                testReq.RequestHeaders <- 
+                    this.RequestHeaders
+                    |> Seq.filter (fun t -> not (String.IsNullOrWhiteSpace(t.Key)))
+                    |> Seq.toArray
+                testReq.RequestParameters <- 
+                    this.RequestParameters
+                    |> Seq.filter (fun t -> not (String.IsNullOrWhiteSpace(t.Name)))
+                    |> Seq.toArray
                 testReq.RequestText <- this.Request.Doc.Text
                 Core.saveTestData testReq
                  
@@ -127,7 +133,20 @@ type MainWindowViewModel() =
         let canRun arg = not this.IsCallInProgress
         Command.create 
             canRun
-            (fun arg -> failwith "//TODO")
+            (fun arg -> 
+                match Core.openTestData() with
+                | Some(testReq) ->
+                    this.TargetUrl <- testReq.Url
+                    this.SelectedVerb <- testReq.Verb
+                    this.Request.Doc.Text <- testReq.RequestText
+                    this.RequestHeaders.Clear()
+                    testReq.RequestHeaders 
+                    |> Seq.filter (fun t -> not (String.IsNullOrWhiteSpace(t.Key)))
+                    |>  Seq.iter (fun h -> this.RequestHeaders.Add h)
+                    testReq.RequestParameters 
+                    |> Seq.filter (fun t -> not (String.IsNullOrWhiteSpace(t.Name)))
+                    |>  Seq.iter (fun h -> this.RequestParameters.Add h)
+                | None -> ())
             
     member this.SettingsCommand =
         let canRun arg = not this.IsCallInProgress

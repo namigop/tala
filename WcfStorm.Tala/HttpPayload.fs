@@ -20,22 +20,7 @@ type HttpPayload() =
         let folding, _ = EditorOptions.get mode
         folding
   
-    let prettyPrintJson(json) =
-        try
-            use stringReader = new StringReader(json)
-            use stringWriter = new StringWriter()
-            use jsonReader = new JsonTextReader(stringReader)
-            use jsonWriter = new JsonTextWriter(stringWriter, Formatting = Newtonsoft.Json.Formatting.Indented)
-            jsonWriter.WriteToken(jsonReader)
-            stringWriter.ToString()
-        with
-        | _ -> json
-        
-    let prettyPrintXml(xml) =
-        try
-            XDocument.Parse(xml).ToString()
-        with
-        | _ -> xml
+ 
 
     member this.Mode 
         with get() = mode
@@ -57,7 +42,7 @@ type HttpPayload() =
 
     member this.SetText(text, mode:HttpContentType) =
         match mode with
-        | Json(_) -> this.Doc.Text <- prettyPrintJson text
-        | Xml(_) -> this.Doc.Text <- prettyPrintXml text
+        | Json(_) -> this.Doc.Text <- EditorOptions.prettyPrintJson text
+        | Xml(_) -> this.Doc.Text <- EditorOptions.prettyPrintXml text
         | _ -> this.Doc.Text <- text
             

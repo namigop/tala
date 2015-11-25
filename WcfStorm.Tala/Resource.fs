@@ -91,16 +91,4 @@ module Config =
 
     let basicAuth = new BasicAuthentation()
     let genSettings = GeneralSettings()
-//
-//   
-//    let followRedirect = 
-//        ConfigurationManager.AppSettings.Item("followRedirects")
-//        |> Convert.ToBoolean
-//
-//    let timeoutInMsec = 
-//        ConfigurationManager.AppSettings.Item("timeoutInMsec")
-//        |> Convert.ToInt32
-//
-//    let maxRedirects = 
-//        ConfigurationManager.AppSettings.Item("maxRedirects")
-//        |> Convert.ToInt32
+
