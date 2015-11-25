@@ -40,10 +40,10 @@ type HttpPayload() =
     member this.Mode 
         with get() = mode
         and set v =
-            let folding, highlighting2 =  EditorOptions.get v
-            
-            this.Highlighting <- highlighting2
-            foldFunction <- folding 
+            if not(mode = v) then
+                let folding, highlighting2 =  EditorOptions.get v
+                this.Highlighting <- highlighting2
+                foldFunction <- folding 
     member this.Highlighting 
 
         with get () = highlighting

@@ -7,6 +7,7 @@ open System.Threading
 open FsXaml
 open System
 open System.Net
+open Newtonsoft.Json
 
 type MainWindow = XAML<"MainWindow.xaml">
 type SettingsWindow = XAML<"SettingsWindow.xaml">
@@ -113,7 +114,14 @@ type MainWindowViewModel() =
         let canRun arg = not this.IsCallInProgress
         Command.create 
             canRun
-            (fun arg -> failwith "//TODO")
+            (fun arg -> 
+                let testReq = TestRequest(Url = this.TargetUrl, Verb = this.SelectedVerb, RequestText = "")
+                testReq.RequestHeaders <- this.RequestHeaders |> Seq.toArray
+                testReq.RequestParameters <- this.RequestParameters |> Seq.toArray
+                testReq.RequestText <- this.Request.Doc.Text
+                Core.saveTestData testReq
+                 
+            )
  
     member this.OpenCommand =
         let canRun arg = not this.IsCallInProgress

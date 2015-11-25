@@ -12,10 +12,17 @@
     Height="800" MinWidth="1200" Width="1200"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     Style="{DynamicResource CleanWindowStyleKey}"
+    IconBitmapScalingMode="HighQuality"
+ 
     ShowIconOnTitleBar="True"
     ResizeMode="CanResizeWithGrip"
     GlowBrush="{DynamicResource AccentColorBrush}"
     x:Name="mainWindow">
+    <controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Image Source="{StaticResource mainIco}" Width="28" />
+        </DataTemplate>
+    </controls:MetroWindow.IconTemplate>
     <controls:MetroWindow.Background>
         <StaticResource ResourceKey="DefaultBackground" />
     </controls:MetroWindow.Background>

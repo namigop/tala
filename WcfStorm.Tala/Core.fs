@@ -1,6 +1,7 @@
 ﻿namespace WcfStorm.Tala
 
 open FsXaml
+open System.IO
 open RestSharp
 open System
 open System.Collections.ObjectModel
@@ -8,6 +9,7 @@ open System.Net
 open System.Threading
 open Xceed.Wpf.Toolkit
 open System.Diagnostics
+open Newtonsoft.Json
 
 type ProcessedResponse =
     { ResponseCode : string
@@ -133,4 +135,16 @@ module Core =
         with
         | _ -> None
 
+    let saveTestData(testReq:TestRequest) =
+        let dlg = new Microsoft.Win32.SaveFileDialog();
+        dlg.FileName <- "Data"; // Default file name
+        dlg.DefaultExt <- ".tala"; // Default file extension
+        dlg.Filter <- "Tala (.tala)|*.tala"; // Filter files by extension
+
+        // Show save file dialog box
+        let result = dlg.ShowDialog()
+        if (result.HasValue && result.Value) then    
+            let filename = dlg.FileName
+            File.WriteAllText(filename, JsonConvert.SerializeObject(testReq))
+        
        

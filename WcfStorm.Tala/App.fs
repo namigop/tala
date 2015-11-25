@@ -22,40 +22,43 @@ module main =
         let getVm() =
             let window = app.Root.MainWindow
             window.DataContext :?> MainWindowViewModel
-//        app.Root.Activated 
-//            |> Observable.add (fun arg ->
-//                if not (!isSetup) then
-//                    isSetup := true
-//                    let vm = getVm()
-//                    let textEditorRequest =
-//                        app.Root.MainWindow.FindName("textEditorRequest") :?> TextEditor
-//                    let textEditorResponse =
-//                        app.Root.MainWindow.FindName("textEditorResponse") :?> TextEditor
-//                    let reqFoldingManager = FoldingManager.Install(textEditorRequest.TextArea)
-//                    let respFoldingManager = FoldingManager.Install(textEditorResponse.TextArea)
-//
-//                    let timer =
-//                        let temp = new DispatcherTimer(Interval = TimeSpan.FromMilliseconds(1000.0))
-//                        temp.Tag <- true
-//                        temp.Tick
-//                        |> Observable.add
-//                                (fun arg ->
-//                                if (temp.Tag :?> bool) then
-//                                    if (vm.Request.Doc.Text.Length > 0) then
-//                                        vm.Request.FoldFunction(reqFoldingManager, vm.Request.Doc)
-//                                    temp.Tag <- false
-//                                else
-//                                    temp.Tag <- true
-//                                    if (vm.Response.Doc.Text.Length > 0) then
-//                                        vm.Response.FoldFunction(respFoldingManager, vm.Response.Doc))
-//                        temp
-//                    timer.Start())
+
+        app.Root.Activated 
+            |> Observable.add (fun arg ->
+                if not (!isSetup) then
+                    isSetup := true
+                    let vm = getVm()
+                    let textEditorRequest =
+                        app.Root.MainWindow.FindName("textEditorRequest") :?> TextEditor
+                    let textEditorResponse =
+                        app.Root.MainWindow.FindName("textEditorResponse") :?> TextEditor
+                    let reqFoldingManager = FoldingManager.Install(textEditorRequest.TextArea)
+                    let respFoldingManager = FoldingManager.Install(textEditorResponse.TextArea)
+
+                    let timer =
+                        let temp = new DispatcherTimer(Interval = TimeSpan.FromMilliseconds(1000.0))
+                        temp.Tag <- true
+                        temp.Tick
+                        |> Observable.add
+                                (fun arg ->
+                                if (temp.Tag :?> bool) then
+                                    if (vm.Request.Doc.Text.Length > 0) then
+                                        vm.Request.FoldFunction(reqFoldingManager, vm.Request.Doc)
+                                        do  match vm.RequestHeaders |> Seq.tryFind(fun h -> h.Key = "Content-Type") with
+                                            | Some(h2) ->
+                                                vm.Request.Mode <- Core.getContentType(h2.Value)
+                                            | None -> ()
+                                    temp.Tag <- false
+                                else
+                                    temp.Tag <- true
+                                    if (vm.Response.Doc.Text.Length > 0) then
+                                        vm.Response.FoldFunction(respFoldingManager, vm.Response.Doc))
+                        temp
+                    timer.Start())
+
         Application.Current.DispatcherUnhandledException 
             |> Observable.add (fun f ->
                     f.Handled <- true
-                    //            let getVm() =
-                    //                let window = app.Root.MainWindow
-                    //                window.DataContext :?> MainWindowViewModel
                     let vm = getVm()
                     vm.IsCallInProgress <- false
                     MessageBox.Show(f.Exception.ToString()) |> ignore)

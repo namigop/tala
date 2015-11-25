@@ -81,6 +81,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="rest.res" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Icons.xaml">
