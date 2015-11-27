@@ -139,7 +139,7 @@ module Core =
         let dlg = new Microsoft.Win32.SaveFileDialog();
         dlg.FileName <- "Data"
         dlg.DefaultExt <- ".tala"
-        dlg.Filter <- "Tala (.tala)|*.tala"
+        dlg.Filter <- "Tala (*.tala)|*.tala"
 
         // Show save file dialog box
         let result = dlg.ShowDialog()

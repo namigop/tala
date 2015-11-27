@@ -47,9 +47,9 @@
                     <GroupBox Header="Authentication mode" Grid.Row="0" Background="#CFD6E5">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="Windows" IsChecked="{Binding IsWindowsAuthChecked}" Margin="5"/>
                                 <RadioButton Content="Anonymous" IsChecked="{Binding IsAnonymousAuthChecked}" Margin="5"/>
                                 <RadioButton Content="Basic" IsChecked="{Binding IsBasicAuthChecked}" Margin="5"/>
-                                <RadioButton Content="Windows" IsChecked="{Binding IsWindowsAuthChecked}" Margin="5"/>
                             </StackPanel>
                             <DockPanel Visibility="{Binding IsWindowsAuthChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Border Background="Gray" Height="1" DockPanel.Dock="Top" />

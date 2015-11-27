@@ -12,6 +12,7 @@ module main =
     open System.ComponentModel
     open ICSharpCode.AvalonEdit.Folding
     open System.Windows.Threading
+    open System.Windows.Controls
 
     [<STAThread>]
     [<EntryPoint>]
@@ -34,7 +35,7 @@ module main =
                         app.Root.MainWindow.FindName("textEditorResponse") :?> TextEditor
                     let reqFoldingManager = FoldingManager.Install(textEditorRequest.TextArea)
                     let respFoldingManager = FoldingManager.Install(textEditorResponse.TextArea)
-
+                    
                     let timer =
                         let temp = new DispatcherTimer(Interval = TimeSpan.FromMilliseconds(1000.0))
                         temp.Tag <- true

@@ -100,7 +100,9 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Button Padding="5,2,5,2" Style="{DynamicResource SquareButtonStyle}" Command="{Binding SendCommand}" Grid.Column="0" BorderThickness="0" >
+                            <Button Padding="5,2,5,2" Style="{DynamicResource SquareButtonStyle}" 
+                                    ToolTip="Press F5 to send the request"
+                                    Command="{Binding SendCommand}" Grid.Column="0" BorderThickness="0" >
                                 <StackPanel Orientation="Horizontal">
                                     <StackPanel.Resources>
                                         <SolidColorBrush Color="Green" x:Key="FillColor" />
