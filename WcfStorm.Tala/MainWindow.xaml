@@ -226,25 +226,13 @@
                                 </Button>
                                 <Label  FontSize="14" FontWeight="SemiBold" >
                                     <StackPanel Orientation="Horizontal">
-                                        <StackPanel.Resources>
-                                            <Style TargetType="RadioButton" BasedOn="{StaticResource TalaRadioButton}">
-                                                <Setter Property="Background" Value="#CFD6E5" />
-                                                <Setter Property="Margin" Value="5,1,0,1" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsChecked" Value="True">
-                                                        <Setter Property="Foreground" Value="Navy" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                           
-                                        </StackPanel.Resources>
-                                        <RadioButton     Content="Parameters" IsChecked="{Binding IsParametersChecked}"   />
-                                        <RadioButton    Content="Raw Body"  IsChecked="{Binding IsRawBodyChecked}" />
+                                        <RadioButton    Content="Raw Body"  IsChecked="{Binding Request.IsRawBodyChecked}" />
+                                        <RadioButton     Content="Parameters" IsChecked="{Binding Request.IsParametersChecked}"   />
                                     </StackPanel>
                                    
                                 </Label>
                             </DockPanel>
-                            <TabControl Grid.Row="1" TabStripPlacement="Left" controls:TabControlHelper.IsUnderlined="True" SelectedIndex="{Binding SelectedTabIndex}">
+                            <TabControl Grid.Row="1" TabStripPlacement="Left" controls:TabControlHelper.IsUnderlined="True" SelectedIndex="{Binding Request.SelectedTabIndex}">
                                 <TabControl.Resources>
                                     <Style TargetType="{x:Type TabItem}"
                                        BasedOn="{StaticResource {x:Type TabItem}}">
@@ -262,6 +250,19 @@
                                         </Setter>
                                     </Style>
                                 </TabControl.Resources>
+
+                                <TabItem Visibility="Collapsed" Header="Body" FontSize="9"  controls:ControlsHelper.HeaderFontSize="14">
+                                    <TabItem.Resources>
+
+                                        <ContentControl x:Key="tabIcon" Content="{StaticResource icon_text}" />
+                                    </TabItem.Resources>
+
+                                    <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt"
+								        SyntaxHighlighting="{Binding Request.Highlighting}"
+                                        ShowLineNumbers="True"
+								        Document="{Binding Request.Doc}" />
+                                </TabItem>
+
                                 <TabItem Visibility="Collapsed" Header="Parameters" controls:ControlsHelper.HeaderFontSize="14">
                                     <TabItem.Resources>
                                         <ContentControl x:Key="tabIcon" Content="{StaticResource icon_table}" />
@@ -318,20 +319,7 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </TabItem>
-
-                                <TabItem Visibility="Collapsed" Header="Body" FontSize="9"  controls:ControlsHelper.HeaderFontSize="14">
-                                    <TabItem.Resources>
-
-                                        <ContentControl x:Key="tabIcon" Content="{StaticResource icon_text}" />
-                                    </TabItem.Resources>
-
-                                    <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt"
-								        SyntaxHighlighting="{Binding Request.Highlighting}"
-                                        ShowLineNumbers="True"
-								        Document="{Binding Request.Doc}" />
-                                </TabItem>
-                                <!--<TabItem Header="s">
-                                </TabItem>-->
+      
                             </TabControl>
                         </Grid>
                     </Grid>
@@ -418,12 +406,53 @@
                             </Grid.RowDefinitions>
                             
                             <Border Grid.Row="0"  Background="#CFD6E5">
-                                <Label Content="Response Body" FontSize="14" FontWeight="SemiBold" />
+                                <Label  FontSize="14" FontWeight="SemiBold" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton Content="Raw Body"  IsChecked="{Binding Response.IsRawBodyChecked}" />
+                                        <RadioButton Content="Cookies" IsChecked="{Binding Response.IsCookiesChecked}"   />
+                                        
+                                    </StackPanel>
+                                </Label>
                             </Border>
-                            <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorResponse" FontFamily="Consolas" FontSize="9pt"
-								ShowLineNumbers="True"
-                                SyntaxHighlighting="{Binding Response.Highlighting}"
-								Document="{Binding Response.Doc}" />
+                            <TabControl Grid.Row="1" SelectedIndex="{Binding Response.SelectedTabIndex}">
+                                 <TabItem Header="RawBody" Visibility="Collapsed">
+                                    <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorResponse" FontFamily="Consolas" FontSize="9pt"
+								        ShowLineNumbers="True"
+                                        SyntaxHighlighting="{Binding Response.Highlighting}"
+								        Document="{Binding Response.Doc}" />
+                                </TabItem>
+                                <TabItem /> <!--placeholder for Parameters-->
+                                <TabItem Header="Cookies" Visibility="Collapsed">
+
+                                    <DataGrid Grid.Row="1" ItemsSource="{Binding ResponseHeaders}" CanUserReorderColumns="False"
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                          HeadersVisibility="None"
+                                          AutoGenerateColumns="False">
+
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn>
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Key}" FontWeight="SemiBold" Margin="5,0,0,0" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTemplateColumn Width="*">
+
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Value}" TextWrapping="Wrap"
+                                                             Margin="0" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </TabItem>
+
+                            </TabControl>
+                           
                            
                         </Grid>
                     </Grid>

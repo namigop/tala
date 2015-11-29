@@ -18,6 +18,7 @@ type ProcessedResponse =
       HttpCallFailed : bool
       HttpContentType : HttpContentType
       RawResponseText : string
+      Cookies : RestSharp.RestResponseCookie seq
       Headers : WcfStorm.Tala.HttpHeader seq }
 
 module Core =
@@ -44,6 +45,7 @@ module Core =
           HttpCallFailed = isFailed rawResponse
           HttpContentType = getContentType(rawResponse.ContentType)
           RawResponseText = rawRespText
+          Cookies = seq { for c in rawResponse.Cookies do yield c } 
           Headers = respHeaders }
      
     let setupBody reqBody (req:IRestRequest)  =            

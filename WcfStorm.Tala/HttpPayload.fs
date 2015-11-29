@@ -11,6 +11,13 @@ open ICSharpCode.AvalonEdit.Folding
 open Newtonsoft.Json
 open System.Xml.Linq
 
+type PayloadSelection =
+    {
+        RawBody : int
+        Parameters :int
+        Cookies :int
+    }
+
 type HttpPayload() =
     inherit NotifyBase()
     let mutable highlighting = Resource.jsonHighlightingMode
@@ -19,8 +26,12 @@ type HttpPayload() =
     let mutable foldFunction = 
         let folding, _ = EditorOptions.get mode
         folding
-  
- 
+
+    let selection = { RawBody=0; Parameters = 1; Cookies = 2}
+    let mutable selectedTabIndex = 0
+    let mutable isParametersChecked = false
+    let mutable isCookiesChecked = false
+    let mutable isRawBodyChecked = true
 
     member this.Mode 
         with get() = mode
@@ -29,8 +40,8 @@ type HttpPayload() =
                 let folding, highlighting2 =  EditorOptions.get v
                 this.Highlighting <- highlighting2
                 foldFunction <- folding 
-    member this.Highlighting 
 
+    member this.Highlighting 
         with get () = highlighting
         and set v = this.RaiseAndSetIfChanged(&highlighting, v, "Highlighting")
     
@@ -39,6 +50,31 @@ type HttpPayload() =
         and set v = this.RaiseAndSetIfChanged(&doc, v, "Doc")
 
     member x.FoldFunction = foldFunction
+    
+    member this.SelectedTabIndex 
+        with get () = selectedTabIndex
+        and set v = this.RaiseAndSetIfChanged(&selectedTabIndex, v, "SelectedTabIndex")
+
+    member this.IsParametersChecked
+        with get () = isParametersChecked
+        and set v = 
+            this.RaiseAndSetIfChanged(&isParametersChecked, v, "IsParametersChecked")
+            if v then 
+               this.SelectedTabIndex <- selection.Parameters
+
+    member this.IsRawBodyChecked
+        with get () = isRawBodyChecked
+        and set v = 
+            this.RaiseAndSetIfChanged(&isRawBodyChecked, v, "IsRawBodyChecked")
+            if v then 
+                this.SelectedTabIndex <- selection.RawBody
+
+    member this.IsCookiesChecked
+        with get () = isCookiesChecked
+        and set v = 
+            this.RaiseAndSetIfChanged(&isCookiesChecked, v, "IsCookiesChecked")
+            if v then 
+                this.SelectedTabIndex <- selection.Cookies
 
     member this.SetText(text, mode:HttpContentType) =
         match mode with

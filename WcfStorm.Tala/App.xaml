@@ -94,7 +94,16 @@
             </ResourceDictionary.MergedDictionaries>
            
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            
+           
+            <Style TargetType="RadioButton" BasedOn="{StaticResource TalaRadioButton}">
+                <Setter Property="Background" Value="#CFD6E5" />
+                <Setter Property="Margin" Value="5,1,0,1" />
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Foreground" Value="#FF002E8B" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
             <Style TargetType="ContextMenu">
                 <Style.Resources>
                     <Style TargetType="TextBlock">
