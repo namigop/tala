@@ -9,7 +9,7 @@ open System
 open System.Net
 open System.Configuration
 
-type SettingsWindowViewModel() as this =
+type SettingsWindowViewModel() =
     inherit NotifyBase()
 
     let mutable isWindowsDefaultCredChecked = true

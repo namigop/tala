@@ -19,6 +19,9 @@ type MainWindowViewModel() =
     let mutable isCallInProgress = false
     let mutable httpCallFailed = false
     let mutable respTime = 0.0
+    let mutable selectedTabIndex = 0
+    let mutable isParametersChecked = true
+    let mutable isRawBodyChecked = false
 
     let verbs =
         let temp = ObservableCollection<Method>()
@@ -65,6 +68,24 @@ type MainWindowViewModel() =
     member this.TargetUrl
         with get () = targetUrl
         and set v = this.RaiseAndSetIfChanged(&targetUrl, v, "TargetUrl")
+
+    member this.SelectedTabIndex 
+        with get () = selectedTabIndex
+        and set v = this.RaiseAndSetIfChanged(&selectedTabIndex, v, "SelectedTabIndex")
+
+    member this.IsParametersChecked
+        with get () = isParametersChecked
+        and set v = 
+            this.RaiseAndSetIfChanged(&isParametersChecked, v, "IsParametersChecked")
+            if v then 
+               this.SelectedTabIndex <- 0
+
+    member this.IsRawBodyChecked
+        with get () = isRawBodyChecked
+        and set v = 
+            this.RaiseAndSetIfChanged(&isRawBodyChecked, v, "IsRawBodyChecked")
+            if v then 
+                this.SelectedTabIndex <- 1
 
     member this.RequestParameters = reqParams
     member this.RequestHeaders = headers

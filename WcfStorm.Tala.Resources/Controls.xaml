@@ -3,7 +3,37 @@
                     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls" xmlns:Custom="http://metro.mahapps.com/winfx/xaml/shared">
 
     <BitmapImage UriSource="rest.ico" x:Key="mainIco"  />
+    <Style x:Key="TalaRadioButton" TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
+        <Setter Property="FontSize" Value="{DynamicResource ContentFontSize}" />
+        <Setter Property="FontFamily" Value="{DynamicResource ContentFontFamily}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="3,0,3,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="3">
 
+                        <ContentPresenter x:Name="contentPresenter"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Content="{TemplateBinding Content}"
+                                          Grid.Column="1"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Foreground" Value="Navy" />
+                            <Setter Property="Background" Value="{DynamicResource AccentColorBrush4}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="ComboBoxStyle1" TargetType="{x:Type ComboBox}">
         <Setter Property="MinHeight" Value="26"/>
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>

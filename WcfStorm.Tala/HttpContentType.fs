@@ -1,4 +1,5 @@
 ﻿namespace WcfStorm.Tala
+open System
 
 type HttpContentType =
     | Json of string 
@@ -8,15 +9,18 @@ type HttpContentType =
 
 type HttpContentType with
     member this.Parse(contentType2 : string) =
-        let contentType = contentType2.ToLowerInvariant().Trim()
-        if contentType.Contains("/json") then
-            Json(contentType)
-        else if contentType.Contains("/xml") || contentType.Contains("/xhtml") then
-            Xml(contentType)
-        else if contentType.Contains("/html") then
-            Html(contentType)
+        if (String.IsNullOrWhiteSpace contentType2) then
+            HttpContentType.Other("")
         else
-            Other(contentType)
+            let contentType = contentType2.ToLowerInvariant().Trim()
+            if contentType.Contains("/json") then
+                Json(contentType)
+            else if contentType.Contains("/xml") || contentType.Contains("/xhtml") then
+                Xml(contentType)
+            else if contentType.Contains("/html") then
+                Html(contentType)
+            else
+                Other(contentType)
         
 
 

@@ -224,29 +224,37 @@
                                         </Viewbox>
                                     </StackPanel>
                                 </Button>
-                                <Label Content="Request Body" FontSize="14" FontWeight="SemiBold" />
+                                <Label  FontSize="14" FontWeight="SemiBold" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Resources>
+                                            <Style TargetType="RadioButton" BasedOn="{StaticResource TalaRadioButton}">
+                                                <Setter Property="Background" Value="#CFD6E5" />
+                                                <Setter Property="Margin" Value="5,1,0,1" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Foreground" Value="Navy" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                           
+                                        </StackPanel.Resources>
+                                        <RadioButton     Content="Parameters" IsChecked="{Binding IsParametersChecked}"   />
+                                        <RadioButton    Content="Raw Body"  IsChecked="{Binding IsRawBodyChecked}" />
+                                    </StackPanel>
+                                   
+                                </Label>
                             </DockPanel>
-                            <TabControl Grid.Row="1" TabStripPlacement="Left" controls:TabControlHelper.IsUnderlined="True">
-
+                            <TabControl Grid.Row="1" TabStripPlacement="Left" controls:TabControlHelper.IsUnderlined="True" SelectedIndex="{Binding SelectedTabIndex}">
                                 <TabControl.Resources>
                                     <Style TargetType="{x:Type TabItem}"
                                        BasedOn="{StaticResource {x:Type TabItem}}">
                                         <Setter Property="HeaderTemplate">
                                             <Setter.Value>
-                                                <DataTemplate>
-                                                    <!--<ContentPresenter Content="{TemplateBinding Content}">
-                                                        <ContentPresenter.LayoutTransform>
-                                                            <RotateTransform Angle="270" />
-                                                        </ContentPresenter.LayoutTransform>
-                                                    </ContentPresenter>-->
+                                                <DataTemplate>                                                   
                                                     <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
                                                         <StackPanel.LayoutTransform>
                                                             <RotateTransform Angle="270" />
                                                         </StackPanel.LayoutTransform>
-                                                        <!--<StackPanel.Resources>
-                                                            <SolidColorBrush x:Key="FillColor" Color="{StaticResource AccentColor2}" />
-                                                        </StackPanel.Resources>
-                                                        <ContentControl Content="{DynamicResource tabIcon}"  Width="20" Height="20" />-->
                                                         <TextBlock Text="{Binding}" />
                                                     </StackPanel>
                                                 </DataTemplate>
@@ -254,7 +262,7 @@
                                         </Setter>
                                     </Style>
                                 </TabControl.Resources>
-                                <TabItem Header="Parameters" controls:ControlsHelper.HeaderFontSize="14">
+                                <TabItem Visibility="Collapsed" Header="Parameters" controls:ControlsHelper.HeaderFontSize="14">
                                     <TabItem.Resources>
                                         <ContentControl x:Key="tabIcon" Content="{StaticResource icon_table}" />
                                     </TabItem.Resources>
@@ -311,7 +319,7 @@
                                     </DataGrid>
                                 </TabItem>
 
-                                <TabItem Header="Body" FontSize="9"  controls:ControlsHelper.HeaderFontSize="14">
+                                <TabItem Visibility="Collapsed" Header="Body" FontSize="9"  controls:ControlsHelper.HeaderFontSize="14">
                                     <TabItem.Resources>
 
                                         <ContentControl x:Key="tabIcon" Content="{StaticResource icon_text}" />
@@ -319,6 +327,7 @@
 
                                     <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorRequest" FontFamily="Consolas" FontSize="9pt"
 								        SyntaxHighlighting="{Binding Request.Highlighting}"
+                                        ShowLineNumbers="True"
 								        Document="{Binding Request.Doc}" />
                                 </TabItem>
                                 <!--<TabItem Header="s">
@@ -412,7 +421,8 @@
                                 <Label Content="Response Body" FontSize="14" FontWeight="SemiBold" />
                             </Border>
                             <avalonEdit:TextEditor Grid.Row="1" x:Name="textEditorResponse" FontFamily="Consolas" FontSize="9pt"
-								SyntaxHighlighting="{Binding Response.Highlighting}"
+								ShowLineNumbers="True"
+                                SyntaxHighlighting="{Binding Response.Highlighting}"
 								Document="{Binding Response.Doc}" />
                            
                         </Grid>
