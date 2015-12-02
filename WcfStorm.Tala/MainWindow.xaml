@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:WcfStorm.Tala;assembly=WcfStorm.Tala"
     xmlns:avalonEdit="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
     xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
+    xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit.PropertyGrid;assembly=Xceed.Wpf.Toolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     TitlebarHeight="40"
     Title="WcfStorm Tala Community Edition"
@@ -421,35 +422,40 @@
                                         SyntaxHighlighting="{Binding Response.Highlighting}"
 								        Document="{Binding Response.Doc}" />
                                 </TabItem>
-                                <TabItem /> <!--placeholder for Parameters-->
+                                <TabItem Visibility="Collapsed"/> <!--placeholder for Parameters-->
                                 <TabItem Header="Cookies" Visibility="Collapsed">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="3*" />
+                                            
+                                        </Grid.ColumnDefinitions>
 
-                                    <DataGrid Grid.Row="1" ItemsSource="{Binding ResponseHeaders}" CanUserReorderColumns="False"
-                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                          HeadersVisibility="None"
-                                          AutoGenerateColumns="False">
+                                        <ListBox ItemsSource ="{Binding ResponseCookies}" Grid.Column="0" SelectedItem="{Binding SelectedResponseCookie}"> 
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Name}" Margin="10,0,10,0"/>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                        <GridSplitter   Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Width="4"/>
+                                        <xctk:PropertyGrid 
+                                            IsCategorized="False"                                           
+                                            IsReadOnly="True"
+                                            ShowAdvancedOptions="False"
+                                            ShowDescriptionByTooltip="False"
+                                            ShowPreview="False"
+                                            ShowSearchBox="False"
+                                            ShowSortOptions="False"
+                                            ShowSummary="False"
+                                            ShowTitle="False"
+                                            SelectedObject="{Binding SelectedResponseCookie}" AutoGenerateProperties="True" Grid.Column="2" />
 
-                                        <DataGrid.Columns>
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Key}" FontWeight="SemiBold" Margin="5,0,0,0" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Width="*">
+                                    </Grid>
 
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Value}" TextWrapping="Wrap"
-                                                             Margin="0" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </TabItem>
+                                   
+                                       </TabItem>
 
                             </TabControl>
                            

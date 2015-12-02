@@ -3,7 +3,7 @@
 open System
 open System.Collections.ObjectModel
 open System.Collections.Specialized
-
+open RestSharp
 type HttpHeader() as this =
     inherit NotifyBase()
     let mutable key = ""
@@ -19,13 +19,6 @@ type HttpHeader() as this =
 
 type HttpHeaders() =
     inherit ObservableCollection<HttpHeader>()
-    
-//    override this.OnCollectionChanged(args) =
-//        match args.Action with
-//        | NotifyCollectionChangedAction.Add ->
-//            base.OnCollectionChanged(args)
-//            if (args.NewItems.Count = 1) then
-//                let key = args.NewItems.[0] :?> HttpHeader
-//                if not(String.IsNullOrWhiteSpace(key.Key)) then
-//                    this.Add(HttpHeader(Key="", Value=""))
-//        |_ ->  base.OnCollectionChanged(args)
+ 
+type Cookies() = 
+    inherit ObservableCollection<RestResponseCookie>()

@@ -22,7 +22,7 @@ type MainWindowViewModel() =
     let mutable selectedTabIndex = 0
     let mutable isParametersChecked = true
     let mutable isRawBodyChecked = false
-
+    let mutable selectedResponseCookie = RestResponseCookie()
     let verbs =
         let temp = ObservableCollection<Method>()
         temp.Add(Method.GET)
@@ -44,6 +44,7 @@ type MainWindowViewModel() =
 
     let mutable targetUrl = urls.Item(0)
     let respHeaders = HttpHeaders()
+    let respCookies = Cookies()
 
     let reqParams =
         let temp = HttpParams()
@@ -69,6 +70,7 @@ type MainWindowViewModel() =
         with get () = targetUrl
         and set v = this.RaiseAndSetIfChanged(&targetUrl, v, "TargetUrl")
 
+    member this.ResponseCookies = respCookies
     member this.RequestParameters = reqParams
     member this.RequestHeaders = headers
     member this.ResponseHeaders = respHeaders
@@ -93,6 +95,10 @@ type MainWindowViewModel() =
     member this.ResponseStatusCode
         with get () = statusCode
         and set v = this.RaiseAndSetIfChanged(&statusCode, v, "ResponseStatusCode")
+
+    member this.SelectedResponseCookie
+        with get () = selectedResponseCookie
+        and set v = this.RaiseAndSetIfChanged(&selectedResponseCookie, v, "SelectedResponseCookie")
 
     member this.AddRequestHeaderCommand = Command.create (fun arg -> not this.IsCallInProgress) (fun arg -> headers.Add(WcfStorm.Tala.HttpHeader(Key = "", Value = "")))
     member this.AddRequestParameterCommand = Command.create (fun arg -> not this.IsCallInProgress) (fun arg -> this.RequestParameters.Add(HttpParam(Name = "", Value = "")))
@@ -167,6 +173,14 @@ type MainWindowViewModel() =
             this.Response.Mode <- processed.HttpContentType
             this.IsCallInProgress <- false
             this.ResponseTimeInSec <- processed.Elapsed.TotalSeconds
+
+            respCookies.Clear()
+            for c in processed.Cookies do
+                respCookies.Add c
+            
+            if respCookies.Count > 0 then
+                this.SelectedResponseCookie <- respCookies.Item(0);  
+
             respHeaders.Clear()
             for h in processed.Headers do
                 respHeaders.Add h
