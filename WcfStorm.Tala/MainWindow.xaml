@@ -77,7 +77,7 @@
 
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
-            <Button>
+            <Button Command="{Binding FeatureComparisonCommand}">
                 <StackPanel Orientation="Horizontal">
                     <ContentControl Content="{StaticResource icon_help}" Width="16" Height="16" />
                 </StackPanel>

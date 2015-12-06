@@ -11,6 +11,7 @@ open System.Windows.Input
 open Xceed.Wpf.Toolkit
 
 type SettingsWindow = XAML< "SettingsWindow.xaml" >
+type InfoWindow = XAML< "InfoWindow.xaml" >
 
 type MainWindowViewModel() =
     inherit NotifyBase()
@@ -150,6 +151,15 @@ type MainWindowViewModel() =
                 |> Seq.filter (fun t -> not (String.IsNullOrWhiteSpace(t.Name)))
                 |> Seq.iter (fun h -> this.RequestParameters.Add h)
             | None -> ())
+
+
+    member this.FeatureComparisonCommand = 
+        let canRun arg =true
+        Command.create canRun (fun arg ->
+            let win = InfoWindow()
+            let vm = win.Root.DataContext :?> InfoWindowViewModel             
+            win.Root.Owner <- System.Windows.Application.Current.MainWindow
+            win.Root.ShowDialog() |> ignore)
 
     member this.SettingsCommand =
         let canRun arg = not this.IsCallInProgress

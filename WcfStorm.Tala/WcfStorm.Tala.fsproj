@@ -71,7 +71,7 @@
     <Compile Include="Core.fs" />
     <Compile Include="Commands.fs" />
     <Compile Include="InfoWindow.fs" />
-    <None Include="InfoWindow.xaml" />
+    <Resource Include="InfoWindow.xaml" />
     <Compile Include="SettingsWindow.fs" />
     <Resource Include="SettingsWindow.xaml" />
     <Compile Include="MainWindow.fs" />
