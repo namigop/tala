@@ -9,6 +9,8 @@ open System.Net
 open System.Threading
 open System.Windows.Input
 open Xceed.Wpf.Toolkit
+open System.Reflection
+
 
 type SettingsWindow = XAML< "SettingsWindow.xaml" >
 type InfoWindow = XAML< "InfoWindow.xaml" >
@@ -35,6 +37,9 @@ type MainWindowViewModel() =
         temp
 
     let mutable selectedVerb = Method.GET
+    let title =
+        let version = Assembly.GetExecutingAssembly().GetName().Version
+        String.Format("WcfStorm.Tala v{0}.{1}",version.Major, version.Minor)
 
     let urls =
         let temp = ObservableCollection<string>()
@@ -71,6 +76,7 @@ type MainWindowViewModel() =
         with get () = targetUrl
         and set v = this.RaiseAndSetIfChanged(&targetUrl, v, "TargetUrl")
 
+    member this.Title = title
     member this.ResponseCookies = respCookies
     member this.RequestParameters = reqParams
     member this.RequestHeaders = headers

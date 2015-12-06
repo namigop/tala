@@ -57,6 +57,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="packages.config" />
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="NotifyBase.fs" />
     <Compile Include="Resource.fs" />
     <Compile Include="HttpContentType.fs" />
