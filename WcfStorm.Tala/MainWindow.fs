@@ -157,7 +157,7 @@ type MainWindowViewModel() =
         let canRun arg =true
         Command.create canRun (fun arg ->
             let win = InfoWindow()
-            let vm = win.Root.DataContext :?> InfoWindowViewModel             
+                  
             win.Root.Owner <- System.Windows.Application.Current.MainWindow
             win.Root.ShowDialog() |> ignore)
 

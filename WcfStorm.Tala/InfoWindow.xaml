@@ -8,8 +8,8 @@
     xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     WindowStartupLocation="CenterOwner"
-    Title="Settings"
-    Height="400" MinWidth="500" Width="500"
+    Title="Feature Comparison"
+    Height="550" Width="700"  MinWidth="700"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     Style="{DynamicResource CleanWindowStyleKey}"
     ResizeMode="CanResizeWithGrip"
@@ -21,53 +21,52 @@
         <StaticResource ResourceKey="DefaultBackground" />
     </controls:MetroWindow.Background>
     <controls:MetroWindow.DataContext>
-        <local:SettingsWindowViewModel />
+        <local:InfoWindowViewModel />
     </controls:MetroWindow.DataContext>
 
-    <Grid Background="#293955">
+    <Grid Background="WhiteSmoke">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="Comparison of WcfStorm.Rest and WcfStor.Tala Community Edition"
-                   Grid.Row="1" />
-        <DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="False" >
+        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"  Text="Comparison of WcfStorm.Rest and WcfStorm.Tala Community Edition"
+                   Grid.Row="0"
+                   FontWeight="SemiBold"/>
+        <DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="False" Grid.Row="1" CanUserAddRows="False" >
             <DataGrid.Resources>
                 <DataTemplate x:Key="YesNoTala">
                     
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsInTala, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsInTala, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <StackPanel.Resources>
                                 <SolidColorBrush Color="Green" x:Key="FillColor" />
                             </StackPanel.Resources>
                             <ContentControl Content="{StaticResource icon_check}" Width="16" Height="16" />
-                            <TextBlock Text="OK" VerticalAlignment="Center" Margin="2,0,5,0"/>
                         </StackPanel>                        
                      
                 </DataTemplate>
                 <DataTemplate x:Key="YesNoRest">
 
-                    <StackPanel Orientation="Horizontal" Visibility="{Binding IsInRest, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" Visibility="{Binding IsInRest, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel.Resources>
                             <SolidColorBrush Color="Green" x:Key="FillColor" />
                         </StackPanel.Resources>
-                        <ContentControl Content="{StaticResource icon_check}" Width="16" Height="16" />
-                        <TextBlock Text="OK" VerticalAlignment="Center" Margin="2,0,5,0"/>
+                        <ContentControl Content="{StaticResource icon_check}" Width="16" Height="16" />                         
                     </StackPanel>
 
                 </DataTemplate>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Feature" Width="3*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Description}" />
+                            <TextBlock Text="{Binding Description}" Margin="5,2,2,2" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn CellTemplate="{StaticResource YesNoRest}">
+                <DataGridTemplateColumn Width="*" Header="WcfStorm.Rest" CellTemplate="{StaticResource YesNoRest}">
                      
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn CellTemplate="{StaticResource YesNoTala}">
+                <DataGridTemplateColumn Width="*" Header="WcfStorm.Tala" CellTemplate="{StaticResource YesNoTala}">
 
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
