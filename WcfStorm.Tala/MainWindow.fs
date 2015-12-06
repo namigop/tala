@@ -102,7 +102,12 @@ type MainWindowViewModel() =
         and set v = this.RaiseAndSetIfChanged(&selectedResponseCookie, v, "SelectedResponseCookie")
 
     member this.AddRequestHeaderCommand = Command.create (fun arg -> not this.IsCallInProgress) (fun arg -> headers.Add(WcfStorm.Tala.HttpHeader(Key = "", Value = "")))
-    member this.AddRequestParameterCommand = Command.create (fun arg -> not this.IsCallInProgress) (fun arg -> this.RequestParameters.Add(HttpParam(Name = "", Value = "")))
+    member this.AddRequestParameterCommand = 
+        Command.create 
+            (fun arg -> not this.IsCallInProgress) 
+            (fun arg -> 
+                this.Request.SelectedTabIndex <- 1
+                this.RequestParameters.Add(HttpParam(Name = "", Value = "")))
 
     member this.RemoveHeaderCommand =
         let onRun (arg : obj) =

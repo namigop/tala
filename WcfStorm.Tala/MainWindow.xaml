@@ -227,8 +227,28 @@
                                 </Button>
                                 <Label  FontSize="14" FontWeight="SemiBold" >
                                     <StackPanel Orientation="Horizontal">
-                                        <RadioButton    Content="Raw Body"  IsChecked="{Binding Request.IsRawBodyChecked}" />
-                                        <RadioButton     Content="Parameters" IsChecked="{Binding Request.IsParametersChecked}"   />
+                                        <RadioButton IsChecked="{Binding Request.IsRawBodyChecked}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" >
+                                                    <StackPanel.Resources>
+                                                        <SolidColorBrush Color="#FF5A3535" x:Key="FillColor" />
+                                                    </StackPanel.Resources>
+                                                    <ContentControl Content="{StaticResource icon_b}" Width="16" Height="16" />
+                                                </StackPanel>
+                                                <TextBlock Text="Raw Body" Margin="2,0,0,0"/>
+                                            </StackPanel>
+                                        </RadioButton>
+                                        <RadioButton      IsChecked="{Binding Request.IsParametersChecked}"  >
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" >
+                                                    <StackPanel.Resources>
+                                                        <SolidColorBrush Color="#FF5A3535" x:Key="FillColor" />
+                                                    </StackPanel.Resources>
+                                                    <ContentControl Content="{StaticResource icon_parameters}" Width="16" Height="16" />
+                                                </StackPanel>
+                                                <TextBlock Text="Parameters" Margin="2,0,0,0"/>
+                                            </StackPanel>
+                                        </RadioButton>
                                     </StackPanel>
                                    
                                 </Label>
@@ -409,8 +429,28 @@
                             <Border Grid.Row="0"  Background="#CFD6E5">
                                 <Label  FontSize="14" FontWeight="SemiBold" >
                                     <StackPanel Orientation="Horizontal">
-                                        <RadioButton Content="Raw Body"  IsChecked="{Binding Response.IsRawBodyChecked}" />
-                                        <RadioButton Content="Cookies" IsChecked="{Binding Response.IsCookiesChecked}"   />
+                                        <RadioButton   IsChecked="{Binding Response.IsRawBodyChecked}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" >
+                                                    <StackPanel.Resources>
+                                                        <SolidColorBrush Color="#FF5A3535" x:Key="FillColor" />
+                                                    </StackPanel.Resources>
+                                                    <ContentControl Content="{StaticResource icon_b}" Width="16" Height="16" />
+                                                </StackPanel>
+                                                <TextBlock Text="Raw Body" Margin="2,0,0,0"/>
+                                            </StackPanel>
+                                        </RadioButton>
+                                        <RadioButton  IsChecked="{Binding Response.IsCookiesChecked}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" >
+                                                    <StackPanel.Resources>
+                                                        <SolidColorBrush Color="#FF5A3535" x:Key="FillColor" />
+                                                    </StackPanel.Resources>
+                                                    <ContentControl Content="{StaticResource icon_gear}" Width="16" Height="16" />
+                                                </StackPanel>
+                                                <TextBlock Text="Cookies" Margin="2,0,0,0"/>
+                                            </StackPanel>
+                                        </RadioButton>
                                         
                                     </StackPanel>
                                 </Label>
@@ -435,14 +475,23 @@
                                         <ListBox ItemsSource ="{Binding ResponseCookies}" Grid.Column="0" SelectedItem="{Binding SelectedResponseCookie}"> 
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Text="{Binding Name}" Margin="10,0,10,0"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal" >
+                                                            <StackPanel.Resources>
+                                                                <SolidColorBrush Color="BurlyWood" x:Key="FillColor" />
+                                                            </StackPanel.Resources>
+                                                            <ContentControl Content="{StaticResource icon_gear}" Width="16" Height="16" />
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding Name}" Margin="5"/>
+                                                    </StackPanel>
+                                                    
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
                                         </ListBox>
                                         <GridSplitter   Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Width="4"/>
                                         <xctk:PropertyGrid 
                                             IsCategorized="False"                                           
-                                            IsReadOnly="True"
+                                            IsReadOnly="False"
                                             ShowAdvancedOptions="False"
                                             ShowDescriptionByTooltip="False"
                                             ShowPreview="False"

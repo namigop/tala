@@ -22,8 +22,6 @@ type Response =
     | POST_Resp of Guid * Task<IRestResponse>
     | PUT_Resp of Guid * Task<IRestResponse>
 
-//| DEL  of Uri * IRestRequest
-//| PUT  of Uri * IRestRequest
 type IClient =
     abstract Run : CancellationTokenSource -> Request -> Response
 
