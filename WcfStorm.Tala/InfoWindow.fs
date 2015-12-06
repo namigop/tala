@@ -57,4 +57,10 @@ type InfoWindowViewModel() =
 
     member this.Features =features
 
+    member this.OpenWcfStormCommand =
+        let canRun arg = true
+        Command.create 
+            canRun
+            (fun arg -> System.Diagnostics.Process.Start("http://www.wcfstorm.com/wcf/learn-more-rest.aspx") |> ignore)
+
 

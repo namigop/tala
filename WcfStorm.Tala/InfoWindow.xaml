@@ -32,6 +32,11 @@
         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"  Text="Comparison of WcfStorm.Rest and WcfStorm.Tala Community Edition"
                    Grid.Row="0"
                    FontWeight="SemiBold"/>
+        <ContentControl HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0">
+            <Hyperlink Command="{Binding OpenWcfStormCommand}" >
+                <Run Text="check out wcfstorm.rest" />
+            </Hyperlink>
+        </ContentControl>
         <DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="False" Grid.Row="1" CanUserAddRows="False" >
             <DataGrid.Resources>
                 <DataTemplate x:Key="YesNoTala">
