@@ -15,6 +15,9 @@ open System.Reflection
 type SettingsWindow = XAML< "SettingsWindow.xaml" >
 type InfoWindow = XAML< "InfoWindow.xaml" >
 
+/// <summary>
+/// DataContext of the MainWindow
+/// </summary>
 type MainWindowViewModel() =
     inherit NotifyBase()
     let requestPayload = HttpPayload()
@@ -72,42 +75,109 @@ type MainWindowViewModel() =
 
     let mutable statusCode = ""
 
+    /// <summary>
+    /// Gets or sets the selected Url
+    /// </summary>
     member this.TargetUrl
         with get () = targetUrl
         and set v = this.RaiseAndSetIfChanged(&targetUrl, v, "TargetUrl")
 
+    /// <summary>
+    /// Gets the application Title
+    /// </summary>
     member this.Title = title
+
+    /// <summary>
+    /// Gets the response cookies
+    /// </summary>
     member this.ResponseCookies = respCookies
+
+    /// <summary>
+    /// Gets the collection of http request parameters
+    /// </summary>
     member this.RequestParameters = reqParams
+
+     /// <summary>
+    /// Gets the collection of http request headers
+    /// </summary>
     member this.RequestHeaders = headers
+
+    /// <summary>
+    /// Gets the collection of http response headers
+    /// </summary>
     member this.ResponseHeaders = respHeaders
+
+    /// <summary>
+    /// Gets the request payload.
+    /// </summary>
     member this.Request = requestPayload
+
+    /// <summary>
+    /// Gets the response payload
+    /// </summary>
     member this.Response = responsePayload
+
+    /// <summary>
+    /// Gets a collection Of Urls that the user can select from
+    /// </summary>
     member this.Urls = urls
+
+    /// <summary>
+    /// Gets a collectionHTTP Vebs (GET, PUT, POST) that the user can select from
+    /// </summary>
     member this.Verbs = verbs
+
+    /// <summary>
+    /// Gets the collection of parametertypes (RawBody, Parameters, Cookies)
+    /// </summary>
     member this.ParameterTypeSelection = parameterTypeSelection
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the call failed or not
+    /// </summary>
     member this.HttpCallFailed
         with get () = httpCallFailed
         and set v = this.RaiseAndSetIfChanged(&httpCallFailed, v, "HttpCallFailed")
 
+    /// <summary>
+    /// Gets or sets the selected HTTP verb
+    /// </summary>
     member this.SelectedVerb
         with get () = selectedVerb
         and set v = this.RaiseAndSetIfChanged(&selectedVerb, v, "SelectedVerb")
 
+    /// <summary>
+    /// Gets or sets a value indicating whether an HTTP call is in progress
+    /// </summary>
     member this.IsCallInProgress
         with get () = isCallInProgress
         and set v = this.RaiseAndSetIfChanged(&isCallInProgress, v, "IsCallInProgress")
 
+    /// <summary>
+    /// Gets or sets the HTTP status code of the response
+    /// </summary>
     member this.ResponseStatusCode
         with get () = statusCode
         and set v = this.RaiseAndSetIfChanged(&statusCode, v, "ResponseStatusCode")
 
+    /// <summary>
+    /// Gets or sets the selected  response cookie
+    /// </summary>
     member this.SelectedResponseCookie
         with get () = selectedResponseCookie
         and set v = this.RaiseAndSetIfChanged(&selectedResponseCookie, v, "SelectedResponseCookie")
 
-    member this.AddRequestHeaderCommand = Command.create (fun arg -> not this.IsCallInProgress) (fun arg -> headers.Add(WcfStorm.Tala.HttpHeader(Key = "", Value = "")))
+    /// <summary>
+    /// Gets the command to add a request header
+    /// </summary>
+    member this.AddRequestHeaderCommand = 
+        Command.create 
+            (fun arg -> not this.IsCallInProgress) 
+            (fun arg -> headers.Add(WcfStorm.Tala.HttpHeader(Key = "", Value = "")))
+
+    /// <summary>
+    /// Gets the command to add a request parameter
+    /// </summary>
     member this.AddRequestParameterCommand = 
         Command.create 
             (fun arg -> not this.IsCallInProgress) 
@@ -115,6 +185,9 @@ type MainWindowViewModel() =
                 this.Request.SelectedTabIndex <- 1
                 this.RequestParameters.Add(HttpParam(Name = "", Value = "")))
 
+    /// <summary>
+    /// Gets the command to remove an HTTP header
+    /// </summary>
     member this.RemoveHeaderCommand =
         let onRun (arg : obj) =
             match Cast.convert<WcfStorm.Tala.HttpHeader> (arg) with
@@ -124,6 +197,9 @@ type MainWindowViewModel() =
             | None -> ()
         Command.create (fun arg -> not this.IsCallInProgress) onRun
 
+    /// <summary>
+    /// Gets the command to remove an HTTP request
+    /// </summary>
     member this.RemoveRequestParameterCommand =
         let onRun (arg : obj) =
             match Cast.convert<WcfStorm.Tala.HttpParam> (arg) with
@@ -133,6 +209,9 @@ type MainWindowViewModel() =
             | None -> ()
         Command.create (fun arg -> not this.IsCallInProgress) onRun
 
+    /// <summary>
+    /// Gets the command to save the Tala test
+    /// </summary>
     member this.SaveCommand =
         let canRun arg = not this.IsCallInProgress
         Command.create canRun (fun arg ->
@@ -146,6 +225,9 @@ type MainWindowViewModel() =
             testReq.RequestText <- this.Request.Doc.Text
             Core.saveTestData testReq)
 
+    /// <summary>
+    /// Gets the command to load the saved Talatest
+    /// </summary>
     member this.OpenCommand =
         let canRun arg = not this.IsCallInProgress
         Command.create canRun (fun arg ->
@@ -163,7 +245,9 @@ type MainWindowViewModel() =
                 |> Seq.iter (fun h -> this.RequestParameters.Add h)
             | None -> ())
 
-
+    /// <summary>
+    /// Gets the command to showa feature comparision to WcfStorm.REST
+    /// </summary>
     member this.FeatureComparisonCommand = 
         let canRun arg =true
         Command.create canRun (fun arg ->
@@ -172,6 +256,9 @@ type MainWindowViewModel() =
             win.Root.Owner <- System.Windows.Application.Current.MainWindow
             win.Root.ShowDialog() |> ignore)
 
+    /// <summary>
+    /// Gets the command to open the setting window
+    /// </summary>
     member this.SettingsCommand =
         let canRun arg = not this.IsCallInProgress
         Command.create canRun (fun arg ->
@@ -181,10 +268,16 @@ type MainWindowViewModel() =
             win.Root.Owner <- System.Windows.Application.Current.MainWindow
             win.Root.ShowDialog() |> ignore)
 
+    /// <summary>
+    /// Gets the time taken for the HTTP call
+    /// </summary>
     member this.ResponseTimeInSec
         with get () = respTime
         and set v = this.RaiseAndSetIfChanged(&respTime, v, "ResponseTimeInSec")
 
+    /// <summary>
+    /// Gets the command to send the HTTP Request
+    /// </summary>
     member this.SendCommand =
         let processResp (rawResponse : IRestResponse) elapsed =
             let processed = Core.processRestResp rawResponse elapsed

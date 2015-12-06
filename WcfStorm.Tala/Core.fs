@@ -11,6 +11,9 @@ open Xceed.Wpf.Toolkit
 open System.Diagnostics
 open Newtonsoft.Json
 
+/// <summary>
+/// Wrapper for the HTTP Response
+/// </summary>
 type ProcessedResponse =
     { ResponseCode : string
       ResponseStatus : RestSharp.ResponseStatus
@@ -22,6 +25,10 @@ type ProcessedResponse =
       Headers : WcfStorm.Tala.HttpHeader seq }
 
 module Core =
+
+    /// <summary>
+    /// Checks if the response failed or returned an HTTP respons that indicates a failure
+    /// </summary>
     let isFailed (rawResponse : IRestResponse) =
         rawResponse.ResponseStatus = ResponseStatus.Aborted || 
         rawResponse.ResponseStatus = ResponseStatus.Error || 
@@ -29,15 +36,19 @@ module Core =
         rawResponse.ErrorException <> null ||
         (Convert.ToInt32(rawResponse.StatusCode)) >= 300
 
+    /// <summary>
+    /// Get the content type
+    /// </summary>
     let getContentType rawContentType = HttpContentType.Other("").Parse(rawContentType)
+
+    /// <summary>
+    /// Read the RestResponse and create a wrapper for it
+    /// </summary>
     let processRestResp (rawResponse : IRestResponse) (elapsed:TimeSpan) =
-      
         let respCode = "HTTP " + Convert.ToInt32(rawResponse.StatusCode).ToString() + " " + rawResponse.StatusDescription
-         
         let rawRespText =
             if (rawResponse.ErrorException = null) then rawResponse.Content
             else rawResponse.ErrorException.ToString()
-
         let respHeaders = rawResponse.Headers |> Seq.map (fun i -> WcfStorm.Tala.HttpHeader(Key = i.Name, Value = i.Value.ToString()))
         { ResponseCode = respCode
           ResponseStatus = rawResponse.ResponseStatus
@@ -48,6 +59,9 @@ module Core =
           Cookies = seq { for c in rawResponse.Cookies do yield c } 
           Headers = respHeaders }
      
+    /// <summary>
+    /// Setup the HTTP Request Body
+    /// </summary>
     let setupBody reqBody (req:IRestRequest)  =            
         if  req.RequestFormat = DataFormat.Xml then
                 req.AddParameter(new Parameter( Name="application/xml", Value=reqBody, Type = ParameterType.RequestBody)) |>ignore  
@@ -56,7 +70,9 @@ module Core =
         else 
             req.AddParameter(new Parameter( Name="text/plain", Value=reqBody, Type = ParameterType.RequestBody)) |>ignore
         
-    
+    /// <summary>
+    /// Get the data format (XML or JSON) by checking the HTTP headers
+    /// </summary>
     let getDataFormat (httpHeaders: HttpHeaders) =
         match (httpHeaders |> Seq.tryFind(fun d -> d.Key.ToLowerInvariant().Trim() = "content-type" ) ) with
         | Some(header) -> 
@@ -69,7 +85,9 @@ module Core =
                 None
         | None -> None
 
-
+    /// <summary>
+    /// Create an HTTP RestRequest
+    /// </summary>
     let createRequest  (verb:Method) (httpParams: HttpParams) (httpHeaders: HttpHeaders) = 
         let req = RestRequest(verb) 
         let tryAssignDataFormat (restReq:RestRequest) allHeaders =
@@ -89,6 +107,9 @@ module Core =
         req
         
  
+    /// <summary>
+    /// Run an HTTP Call asynchronously
+    /// </summary>
     let runAsync url (resource:string) (httpParams : HttpParams) (httpHeaders: HttpHeaders) (verb:Method) (reqBody:string)= 
         let client = Client.create url (httpHeaders |> Seq.tryFind(fun t -> t.Key.ToLowerInvariant().Trim() = "user-agent"))
 
@@ -127,6 +148,9 @@ module Core =
             }
         execute()
 
+    /// <summary>
+    /// Gets a Uri instance
+    /// </summary>
     let getUri rawUrl =
         try
             if (not(String.IsNullOrWhiteSpace(rawUrl))) then
@@ -137,6 +161,9 @@ module Core =
         with
         | _ -> None
 
+    /// <summary>
+    /// Opens a file dialog and saves the Tala test 
+    /// </summary>
     let saveTestData(testReq:TestRequest) =
         let dlg = new Microsoft.Win32.SaveFileDialog();
         dlg.FileName <- "Data"
@@ -148,7 +175,10 @@ module Core =
         if (result.HasValue && result.Value) then    
             let filename = dlg.FileName
             File.WriteAllText(filename, JsonConvert.SerializeObject(testReq) |> EditorOptions.prettyPrintJson)
-        
+     
+    /// <summary>
+    /// Opens a dialog and loads a saved Tala Test
+    /// </summary>
     let openTestData() =
         let dlg = new Microsoft.Win32.OpenFileDialog();
         dlg.DefaultExt <- ".tala" 

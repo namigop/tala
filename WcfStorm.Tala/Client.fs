@@ -6,6 +6,9 @@ open System.Configuration
 open System.Threading
 open System.Threading.Tasks
 
+/// <summary>
+/// Different type of supported requests
+/// </summary>
 type Request =
     | GET_Req of Guid * IRestRequest
     | DELETE_Req of Guid * IRestRequest
@@ -14,6 +17,9 @@ type Request =
     | POST_Req of Guid * IRestRequest
     | PUT_Req of Guid * IRestRequest
 
+/// <summary>
+/// Different types of matching Responses
+/// </summary>
 type Response =
     | GET_Resp of Guid * Task<IRestResponse>
     | DELETE_Resp of Guid * Task<IRestResponse>
@@ -22,13 +28,23 @@ type Response =
     | POST_Resp of Guid * Task<IRestResponse>
     | PUT_Resp of Guid * Task<IRestResponse>
 
+/// <summary>
+/// Asynchronous Rest Client
+/// </summary>
 type IClient =
+
+    /// <summary>
+    /// Executes an Http call
+    /// </summary>
     abstract Run : CancellationTokenSource -> Request -> Response
 
 module Client =
     open RestSharp.Authenticators
     open System.Net
 
+    /// <summary>
+    /// Configures the RestClient
+    /// </summary>
     let private setupConfig (userAgentHeader : WcfStorm.Tala.HttpHeader option) (client : RestClient) =
         client.FollowRedirects <- Config.genSettings.FollowRedirects
         client.Timeout <-  Config.genSettings.Timeout
@@ -36,7 +52,9 @@ module Client =
         if (userAgentHeader.IsSome) then client.UserAgent <- userAgentHeader.Value.Value
         client
 
-      
+    /// <summary>
+    /// Setup the authentication for the RestClient
+    /// </summary>
     let private setupAuth (auth:BasicAuthentation) (restReq:IRestRequest) (client : RestClient) =
         match auth.AuthMode  with
         | AuthMode.Anonymous -> ()
@@ -52,6 +70,9 @@ module Client =
 
         client
 
+    /// <summary>
+    /// Create an asynchronous rest client
+    /// </summary>
     let create (url : string) (userAgentHeader : WcfStorm.Tala.HttpHeader option) =
         let runAsync (cancellationTokenSource : CancellationTokenSource) restReq =
             let client =

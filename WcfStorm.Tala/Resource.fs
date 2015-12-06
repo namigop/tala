@@ -10,15 +10,24 @@ open ICSharpCode.AvalonEdit.Document
 open ICSharpCode.AvalonEdit.Highlighting.Xshd
 open System.Configuration
 
+/// <summary>
+/// Authentication modes
+/// </summary>
 type AuthMode =
-| Anonymous =0
-| Basic = 1
-| Windows = 2
+| Anonymous 
+| Basic 
+| Windows
 
+/// <summary>
+/// Credential types
+/// </summary>
 type WindowsCredentialsType =
-| Default = 0
-| Network = 1
+| Default
+| Network
 
+/// <summary>
+/// Basic Authentication
+/// </summary>
 type BasicAuthentation() =
     inherit NotifyBase()
     let mutable username = ""
@@ -29,7 +38,11 @@ type BasicAuthentation() =
 
     member this.AuthMode 
         with get() = authMode
-        and set v = this.RaiseAndSetIfChanged(&authMode, v, "AuthMode")
+        and set v = 
+            if not (v = AuthMode.Basic) then
+                failwith "Not allowed"
+
+            this.RaiseAndSetIfChanged(&authMode, v, "AuthMode")
    
     member this.WinCredType 
         with get() = winCredType

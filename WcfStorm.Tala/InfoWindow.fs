@@ -55,7 +55,7 @@ type InfoWindowViewModel() =
        
         temp
 
-    member this.Features =features
+    member this.Features = features
 
     member this.OpenWcfStormCommand =
         let canRun arg = true
